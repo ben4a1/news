@@ -1,38 +1,31 @@
 package ru.clevertec.paramonov.news.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
+import ru.clevertec.paramonov.news.model.Role;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "comment")
-public class Comment implements BaseEntity<Long> {
+@Table(name = "users")
+public class User implements BaseEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = "user_id")
     private Long id;
 
-    private LocalDateTime time;
+    private String username;
 
-    private String text;
+    private char[] password;
 
-    @ManyToOne
-    private User username;
-
-    @ManyToOne
-    private News newsId;
+    private Role role;
 }

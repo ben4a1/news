@@ -26,9 +26,13 @@ public class News implements BaseEntity<Long>{
     @Column(name = "news_id")
     private Long id;
 
+    @Column(name = "creation_time")
     private LocalDateTime time;
 
     private String title;
+
+    @Column(name = "subject")
+    private String text;
 
     @OneToMany
     private List<Comment> comments;

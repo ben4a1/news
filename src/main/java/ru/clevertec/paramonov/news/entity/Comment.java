@@ -26,8 +26,10 @@ public class Comment implements BaseEntity<Long> {
     @Column(name = "comment_id")
     private Long id;
 
+    @Column(name = "creation_time")
     private LocalDateTime time;
 
+    @Column(name = "subject")
     private String text;
 
     @ManyToOne

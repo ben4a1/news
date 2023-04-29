@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.entity;
+package ru.clevertec.entity;
 
 
 import jakarta.persistence.Column;

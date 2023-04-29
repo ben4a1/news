@@ -1,10 +1,10 @@
-package ru.clevertec.newsservice.service.impl;
+package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.clevertec.newsservice.dao.CommentRepository;
-import ru.clevertec.newsservice.entity.Comment;
-import ru.clevertec.newsservice.service.CommentService;
+import ru.clevertec.repository.CommentRepository;
+import ru.clevertec.entity.Comment;
+import ru.clevertec.service.CommentService;
 
 import java.util.List;
 import java.util.Optional;

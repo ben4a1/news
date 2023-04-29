@@ -1,6 +1,6 @@
-package ru.clevertec.newsservice.service;
+package ru.clevertec.service;
 
-import ru.clevertec.newsservice.entity.Comment;
+import ru.clevertec.entity.Comment;
 
 import java.util.List;
 import java.util.Optional;

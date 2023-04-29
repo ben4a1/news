@@ -1,4 +1,4 @@
-package ru.clevertec.paramonov.news.entity;
+package ru.clevertec.newsservice.entity;
 
 import java.io.Serializable;
 

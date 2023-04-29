@@ -1,4 +1,4 @@
-package ru.clevertec.paramonov.news.model;
+package ru.clevertec.newsservice.model;
 
 public enum Role {
 

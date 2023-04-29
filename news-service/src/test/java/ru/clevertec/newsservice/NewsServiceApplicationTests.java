@@ -1,13 +1,13 @@
-package ru.clevertec.paramonov.news;
+package ru.clevertec.newsservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OwnTwitterApplicationTests {
+class NewsServiceApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

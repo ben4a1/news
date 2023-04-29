@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface CommentService {
 
     CommentReadDto save(CommentCreateDto comment);
+    Optional<CommentReadDto> update(Long id, CommentCreateDto comment);
     Optional<CommentReadDto> findById(Long id);
     List<CommentReadDto> findAll();
     boolean delete(Long id);

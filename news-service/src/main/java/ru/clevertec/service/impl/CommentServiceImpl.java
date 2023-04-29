@@ -24,6 +24,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
     private final CommentCreateMapper commentCreateMapper;
+
     @Override
     public CommentReadDto save(CommentCreateDto comment) {
         return Optional.of(comment)
@@ -31,6 +32,15 @@ public class CommentServiceImpl implements CommentService {
                 .map(commentRepository::save)
                 .map(commentReadMapper::map)
                 .orElseThrow();
+    }
+
+    @Override
+    public Optional<CommentReadDto> update(Long id, CommentCreateDto comment) {
+        return commentRepository.findById(id)
+                .map(entity ->
+                        commentCreateMapper.map(comment, entity))
+                .map(commentRepository::saveAndFlush)
+                .map(commentReadMapper::map);
     }
 
     @Override

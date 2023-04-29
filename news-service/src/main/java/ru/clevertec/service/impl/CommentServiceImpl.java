@@ -45,7 +45,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Optional<CommentReadDto> findById(Long id) {
-        return Optional.empty();
+        return commentRepository.findById(id)
+                .map(commentReadMapper::map);
     }
 
     @Override
@@ -58,6 +59,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return commentRepository.findById(id)
+                .map(entity -> {
+                    commentRepository.delete(entity);
+                    commentRepository.flush();
+                    return true;
+                })
+                .orElse(false);
     }
 }

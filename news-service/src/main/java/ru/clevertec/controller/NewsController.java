@@ -13,44 +13,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import ru.clevertec.dto.CommentReadDto;
-import ru.clevertec.dto.CommentCreateDto;
-import ru.clevertec.service.CommentService;
+import ru.clevertec.dto.NewsCreateDto;
+import ru.clevertec.dto.NewsReadDto;
+import ru.clevertec.service.NewsService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/comments")
+@RequestMapping("/api/v1/news")
 @RequiredArgsConstructor
-public class CommentController {
+public class NewsController {
 
-    private final CommentService commentService;
+    private final NewsService newsService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CommentReadDto> findAll() {
-        return commentService.findAll();
+    public List<NewsReadDto> findAll() {
+        return newsService.findAll();
     }
 
     @GetMapping("/{id}")
-    public CommentReadDto findById(@PathVariable("id") Long id) {
-        return commentService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public NewsReadDto findById(@PathVariable("id") Long id) {
+        return newsService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentReadDto create(@RequestBody CommentCreateDto comment) {
-        return commentService.save(comment);
+    public NewsReadDto create(@RequestBody NewsCreateDto comment) {
+        return newsService.save(comment);
     }
 
     @PutMapping("/{id}")
-    public CommentReadDto update(@PathVariable("id") Long id, @RequestBody CommentCreateDto comment) {
-        return commentService.update(id, comment).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateDto comment) {
+        return newsService.update(id, comment).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
-        if (!commentService.delete(id)) {
+        if (!newsService.delete(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }

@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users
     id       BIGSERIAL PRIMARY KEY,
     username VARCHAR(64)  NOT NULL UNIQUE,
     password VARCHAR(256) NOT NULL,
-    role     SMALLINT  NOT NULL
+    role     VARCHAR(32)  NOT NULL
 );
 --rollback DROP TABLE users CASCADE
 
@@ -31,8 +31,7 @@ CREATE TABLE IF NOT EXISTS comment
 );
 --rollback DROP TABLE comment CASCADE
 
-
--- --changeset paramonov:4
+--changeset paramonov:4
 CREATE TABLE news_comments
 (
     news_id     BIGINT NOT NULL REFERENCES news,

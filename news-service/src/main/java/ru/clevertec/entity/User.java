@@ -1,6 +1,7 @@
 package ru.clevertec.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,6 @@ public class User implements BaseEntity<Long> {
 
     private String password;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Role role;
 }

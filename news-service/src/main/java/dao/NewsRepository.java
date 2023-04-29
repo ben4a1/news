@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.dao;
+package dao;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;

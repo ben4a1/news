@@ -1,4 +1,4 @@
-package ru.clevertec.newsservice.model;
+package model;
 
 public enum Role {
 

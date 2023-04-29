@@ -38,13 +38,13 @@ public class NewsController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public NewsReadDto create(@RequestBody NewsCreateDto comment) {
-        return newsService.save(comment);
+    public NewsReadDto create(@RequestBody NewsCreateDto news) {
+        return newsService.save(news);
     }
 
     @PutMapping("/{id}")
-    public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateDto comment) {
-        return newsService.update(id, comment).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateDto news) {
+        return newsService.update(id, news).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")

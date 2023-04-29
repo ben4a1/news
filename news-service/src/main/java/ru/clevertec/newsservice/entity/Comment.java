@@ -11,12 +11,14 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "comment")
 public class Comment implements BaseEntity<Long> {
@@ -34,5 +36,6 @@ public class Comment implements BaseEntity<Long> {
     private User user;
 
     @ManyToOne
+    @ToString.Exclude
     private News news;
 }

@@ -1,4 +1,4 @@
-package entity;
+package ru.clevertec.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.clevertec.newsservice.model.Role;
+import ru.clevertec.model.Role;
 
 @Getter
 @Setter

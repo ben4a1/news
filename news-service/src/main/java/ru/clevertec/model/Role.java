@@ -1,4 +1,4 @@
-package model;
+package ru.clevertec.model;
 
 public enum Role {
 

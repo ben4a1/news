@@ -1,4 +1,4 @@
-package entity;
+package ru.clevertec.entity;
 
 import java.io.Serializable;
 

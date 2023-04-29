@@ -3,6 +3,7 @@ package ru.clevertec.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.clevertec.dto.CommentReadDto;
+import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.service.CommentService;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentReadMapper commentReadMapper;
     @Override
     public Comment save(Comment comment) {
         return null;
@@ -27,7 +29,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentReadDto> findAll() {
-        return null;
+        return commentRepository.findAll()
+                .stream()
+                .map(commentReadMapper::map)
+                .toList();
     }
 
     @Override

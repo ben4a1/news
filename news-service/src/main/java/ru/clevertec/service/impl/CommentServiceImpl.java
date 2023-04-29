@@ -1,8 +1,14 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.clevertec.database.QPredicates;
+import ru.clevertec.dto.CommentCreateDto;
+import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
+import ru.clevertec.mapper.impl.CommentCreateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.entity.Comment;
@@ -17,9 +23,14 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
+    private final CommentCreateMapper commentCreateMapper;
     @Override
-    public Comment save(Comment comment) {
-        return null;
+    public CommentReadDto save(CommentCreateDto comment) {
+        return Optional.of(comment)
+                .map(commentCreateMapper::map)
+                .map(commentRepository::save)
+                .map(commentReadMapper::map)
+                .orElseThrow();
     }
 
     @Override

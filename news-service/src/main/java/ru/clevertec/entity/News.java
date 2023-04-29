@@ -19,9 +19,9 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "news")
-@ToString
 public class News implements BaseEntity<Long> {
 
     @Id

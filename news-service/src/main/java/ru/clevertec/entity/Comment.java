@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "comment")
 public class Comment implements BaseEntity<Long> {
@@ -36,6 +35,16 @@ public class Comment implements BaseEntity<Long> {
     private User user;
 
     @ManyToOne
-    @ToString.Exclude
     private News news;
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+               "id=" + id +
+               ", creationTime=" + creationTime +
+               ", subject='" + subject + '\'' +
+               ", user=" + user.getUsername() +
+               ", newsId=" + news.getId() +
+               '}';
+    }
 }

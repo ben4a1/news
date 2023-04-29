@@ -36,6 +36,6 @@ public class News implements BaseEntity<Long> {
     private String subject;
 
     @ToString.Exclude
-    @OneToMany
+    @OneToMany(mappedBy = "news")
     private List<Comment> comments = new ArrayList<>();
 }

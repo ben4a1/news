@@ -26,18 +26,12 @@ CREATE TABLE IF NOT EXISTS comment
     id            BIGSERIAL PRIMARY KEY,
     creation_time TIMESTAMP    NOT NULL,
     subject       VARCHAR(256) NOT NULL,
-    news_id       BIGSERIAL    NOT NULL REFERENCES news,
-    user_id       BIGSERIAL    NOT NULL REFERENCES users
+    news_id       BIGINT    NOT NULL REFERENCES news,
+    user_id       BIGINT    NOT NULL REFERENCES users
 );
 --rollback DROP TABLE comment CASCADE
 
---changeset paramonov:4
-CREATE TABLE news_comments
-(
-    news_id     BIGINT NOT NULL REFERENCES news,
-    comments_id BIGINT NOT NULL UNIQUE REFERENCES comment
-);
---rollback DROP TABLE news_comments CASCADE
+
 
 
 

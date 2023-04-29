@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,17 +24,15 @@ public class News implements BaseEntity<Long>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "news_id")
     private Long id;
 
     @Column(name = "creation_time")
-    private LocalDateTime time;
+    private LocalDateTime creationTime;
 
     private String title;
 
-    @Column(name = "subject")
-    private String text;
+    private String subject;
 
     @OneToMany
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 }

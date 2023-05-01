@@ -10,7 +10,8 @@ public class CommentReadMapper implements Mapper<Comment, CommentReadDto> {
 
     @Override
     public CommentReadDto map(Comment object) {
-        return new CommentReadDto(object.getCreationTime(),
+        return new CommentReadDto(object.getId(),
+                object.getCreationTime(),
                 object.getSubject(),
                 object.getUser().getUsername());
     }

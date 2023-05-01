@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.CommentReadDto;
-import ru.clevertec.dto.CommentCreateDto;
+import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.service.impl.CommentService;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public List<CommentReadDto> findAll() {
         return commentService.findAll();
     }
@@ -38,12 +38,12 @@ public class CommentController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CommentReadDto create(@RequestBody CommentCreateDto comment) {
+    public CommentReadDto create(@RequestBody CommentCreateUpdateDto comment) {
         return commentService.save(comment);
     }
 
     @PutMapping("/{id}")
-    public CommentReadDto update(@PathVariable("id") Long id, @RequestBody CommentCreateDto comment) {
+    public CommentReadDto update(@PathVariable("id") Long id, @RequestBody CommentCreateUpdateDto comment) {
         return commentService.update(id, comment).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

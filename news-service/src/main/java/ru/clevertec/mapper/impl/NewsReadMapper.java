@@ -10,7 +10,8 @@ public class NewsReadMapper implements Mapper<News, NewsReadDto> {
 
     @Override
     public NewsReadDto map(News object) {
-        return new NewsReadDto(object.getCreationTime(),
+        return new NewsReadDto(object.getId(),
+                object.getCreationTime(),
                 object.getTitle(),
                 object.getTitle(),
                 object.getComments());

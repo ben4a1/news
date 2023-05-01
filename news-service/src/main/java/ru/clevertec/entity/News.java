@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +22,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @Entity
 @Table(name = "news")
 public class News implements BaseEntity<Long> {
@@ -39,7 +37,18 @@ public class News implements BaseEntity<Long> {
 
     private String subject;
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "news")
+    @Builder.Default
     private final List<Comment> comments = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "News{" +
+               "id=" + id +
+               ", creationTime=" + creationTime +
+               ", title='" + title + '\'' +
+               ", subject='" + subject + '\'' +
+               ", comments=" + comments +
+               '}';
+    }
 }

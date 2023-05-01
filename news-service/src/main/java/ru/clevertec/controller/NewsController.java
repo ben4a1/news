@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import ru.clevertec.dto.NewsCreateDto;
+import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.service.impl.NewsService;
 
@@ -38,12 +38,12 @@ public class NewsController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public NewsReadDto create(@RequestBody NewsCreateDto news) {
+    public NewsReadDto create(@RequestBody NewsCreateUpdateDto news) {
         return newsService.save(news);
     }
 
     @PutMapping("/{id}")
-    public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateDto news) {
+    public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateUpdateDto news) {
         return newsService.update(id, news).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 

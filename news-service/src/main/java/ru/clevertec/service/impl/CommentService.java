@@ -3,7 +3,7 @@ package ru.clevertec.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.dto.CommentCreateDto;
+import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.mapper.impl.CommentCreateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
@@ -22,7 +22,7 @@ public class CommentService {
     private final CommentCreateMapper commentCreateMapper;
 
     @Transactional
-    public CommentReadDto save(CommentCreateDto comment) {
+    public CommentReadDto save(CommentCreateUpdateDto comment) {
         return Optional.of(comment)
                 .map(commentCreateMapper::map)
                 .map(commentRepository::save)
@@ -31,7 +31,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Optional<CommentReadDto> update(Long id, CommentCreateDto comment) {
+    public Optional<CommentReadDto> update(Long id, CommentCreateUpdateDto comment) {
         return commentRepository.findById(id)
                 .map(entity ->
                         commentCreateMapper.map(comment, entity))

@@ -3,7 +3,7 @@ package ru.clevertec.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.clevertec.dto.NewsCreateDto;
+import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.mapper.impl.NewsCreateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
@@ -22,7 +22,7 @@ public class NewsService {
     private final NewsCreateMapper newsCreateMapper;
 
     @Transactional
-    public NewsReadDto save(NewsCreateDto news) {
+    public NewsReadDto save(NewsCreateUpdateDto news) {
         return Optional.of(news)
                 .map(newsCreateMapper::map)
                 .map(newsRepository::save)
@@ -31,7 +31,7 @@ public class NewsService {
     }
 
     @Transactional
-    public Optional<NewsReadDto> update(Long id, NewsCreateDto news) {
+    public Optional<NewsReadDto> update(Long id, NewsCreateUpdateDto news) {
         return newsRepository.findById(id)
                 .map(entity ->
                         newsCreateMapper.map(news, entity))

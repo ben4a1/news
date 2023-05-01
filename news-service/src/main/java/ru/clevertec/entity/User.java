@@ -29,4 +29,13 @@ public class User implements BaseEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", username='" + username + '\'' +
+               ", role=" + role +
+               '}';
+    }
 }

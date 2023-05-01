@@ -2,25 +2,26 @@ package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.NewsCreateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.mapper.impl.NewsCreateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
-import ru.clevertec.service.NewsService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class NewsServiceImpl implements NewsService {
+public class NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsReadMapper newsReadMapper;
     private final NewsCreateMapper newsCreateMapper;
 
-    @Override
+    @Transactional
     public NewsReadDto save(NewsCreateDto news) {
         return Optional.of(news)
                 .map(newsCreateMapper::map)
@@ -29,7 +30,7 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow();
     }
 
-    @Override
+    @Transactional
     public Optional<NewsReadDto> update(Long id, NewsCreateDto news) {
         return newsRepository.findById(id)
                 .map(entity ->
@@ -38,13 +39,11 @@ public class NewsServiceImpl implements NewsService {
                 .map(newsReadMapper::map);
     }
 
-    @Override
     public Optional<NewsReadDto> findById(Long id) {
         return newsRepository.findById(id)
                 .map(newsReadMapper::map);
     }
 
-    @Override
     public List<NewsReadDto> findAll() {
         return newsRepository.findAll()
                 .stream()
@@ -52,7 +51,7 @@ public class NewsServiceImpl implements NewsService {
                 .toList();
     }
 
-    @Override
+    @Transactional
     public boolean delete(Long id) {
         return newsRepository.findById(id)
                 .map(entity -> {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.dto.CommentCreateDto;
-import ru.clevertec.service.CommentService;
+import ru.clevertec.service.impl.CommentService;
 
 import java.util.List;
 

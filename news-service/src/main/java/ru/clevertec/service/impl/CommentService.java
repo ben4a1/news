@@ -1,31 +1,27 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.clevertec.database.QPredicates;
+import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.CommentCreateDto;
-import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.mapper.impl.CommentCreateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
-import ru.clevertec.entity.Comment;
-import ru.clevertec.service.CommentService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
     private final CommentCreateMapper commentCreateMapper;
 
-    @Override
+    @Transactional
     public CommentReadDto save(CommentCreateDto comment) {
         return Optional.of(comment)
                 .map(commentCreateMapper::map)
@@ -34,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow();
     }
 
-    @Override
+    @Transactional
     public Optional<CommentReadDto> update(Long id, CommentCreateDto comment) {
         return commentRepository.findById(id)
                 .map(entity ->
@@ -43,13 +39,11 @@ public class CommentServiceImpl implements CommentService {
                 .map(commentReadMapper::map);
     }
 
-    @Override
     public Optional<CommentReadDto> findById(Long id) {
         return commentRepository.findById(id)
                 .map(commentReadMapper::map);
     }
 
-    @Override
     public List<CommentReadDto> findAll() {
         return commentRepository.findAll()
                 .stream()
@@ -57,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
                 .toList();
     }
 
-    @Override
+    @Transactional
     public boolean delete(Long id) {
         return commentRepository.findById(id)
                 .map(entity -> {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.NewsCreateDto;
 import ru.clevertec.dto.NewsReadDto;
-import ru.clevertec.service.NewsService;
+import ru.clevertec.service.impl.NewsService;
 
 import java.util.List;
 

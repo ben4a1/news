@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;
-import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.User;
@@ -65,7 +64,7 @@ class CommentControllerIT extends IntegrationTestBase {
     private final CommentReadMapper commentReadMapper;
 
     @Test
-    void findAll() {
+    void checkFindAllShouldReturnSameSize() {
         int expected = commentRepository.findAll().size();
         int actual = commentController.findAll().size();
         assertThat(actual).isEqualTo(expected);
@@ -83,7 +82,7 @@ class CommentControllerIT extends IntegrationTestBase {
     void checkCreateShouldReturnIncreasedSize() {
         int startSize = commentRepository.findAll().size();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("sub", "username1", 1L, 1L);
-        CommentReadDto commentReadDto = commentController.create(commentCreateUpdateDto);
+        commentController.create(commentCreateUpdateDto);
         int sizeAfter = commentRepository.findAll().size();
         assertThat(startSize).isLessThan(sizeAfter);
     }

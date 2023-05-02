@@ -1,9 +1,9 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.controller.CommentController;
+import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.News;
@@ -11,12 +11,14 @@ import ru.clevertec.entity.User;
 import ru.clevertec.integration.IntegrationTestBase;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.model.Role;
+import ru.clevertec.repository.CommentRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
 class CommentControllerIT extends IntegrationTestBase {
@@ -63,6 +65,7 @@ class CommentControllerIT extends IntegrationTestBase {
     }
 
     private final CommentController commentController;
+    private final CommentRepository commentRepository;
 
     @Test
     void findAll() {
@@ -74,11 +77,16 @@ class CommentControllerIT extends IntegrationTestBase {
         Comment expectedComment = COMMENTS.get(Math.toIntExact(COMMENT_ID - 1));
         CommentReadMapper commentReadMapper = new CommentReadMapper();
         var expectedResult = commentReadMapper.map(expectedComment).username();
-        Assertions.assertThat(actualResult).isEqualTo(expectedResult);
+        assertThat(actualResult).isEqualTo(expectedResult);
     }
 
     @Test
-    void create() {
+    void checkCreateShouldReturnIncreasedSizeBy1() {
+        int startSize = commentRepository.findAll().size();
+        CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("sub", "username1", 1L, 1L);
+        CommentReadDto commentReadDto = commentController.create(commentCreateUpdateDto);
+        int sizeAfter = commentRepository.findAll().size();
+        assertThat(startSize).isEqualTo(sizeAfter - 1);
     }
 
     @Test

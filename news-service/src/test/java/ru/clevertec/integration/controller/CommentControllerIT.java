@@ -69,12 +69,12 @@ class CommentControllerIT extends IntegrationTestBase {
     }
 
     @Test
-    void findById() {
-        CommentReadDto actualResult = commentController.findById(COMMENT_ID);
+    void checkFindByIdShouldReturnUsername1() {
+        var actualResult = commentController.findById(COMMENT_ID).username();
         Comment expectedComment = COMMENTS.get(Math.toIntExact(COMMENT_ID - 1));
         CommentReadMapper commentReadMapper = new CommentReadMapper();
-        CommentReadDto expectedResult = commentReadMapper.map(expectedComment);
-        Assertions.assertThat(actualResult.username()).isEqualTo(expectedResult.username());
+        var expectedResult = commentReadMapper.map(expectedComment).username();
+        Assertions.assertThat(actualResult).isEqualTo(expectedResult);
     }
 
     @Test

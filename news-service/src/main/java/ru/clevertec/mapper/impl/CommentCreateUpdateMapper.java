@@ -12,7 +12,7 @@ import static java.time.LocalDateTime.now;
 
 @Component
 @RequiredArgsConstructor
-public class CommentCreateMapper implements Mapper<CommentCreateUpdateDto, Comment> {
+public class CommentCreateUpdateMapper implements Mapper<CommentCreateUpdateDto, Comment> {
 
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
@@ -25,5 +25,15 @@ public class CommentCreateMapper implements Mapper<CommentCreateUpdateDto, Comme
                 .user(userRepository.findByUsername(object.username()))
                 .news(newsRepository.findById(object.newsId()).orElse(null))
                 .build();
+    }
+
+    @Override
+    public Comment map(CommentCreateUpdateDto fromObject, Comment toObject) {
+        copy(fromObject, toObject);
+        return toObject;
+    }
+
+    private void copy(CommentCreateUpdateDto object, Comment comment) {
+        comment.setSubject(object.subject());
     }
 }

@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.User;
-import ru.clevertec.mapper.impl.CommentCreateMapper;
+import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.service.impl.CommentService;
@@ -32,7 +32,7 @@ class CommentServiceTest {
     @Mock
     private CommentReadMapper commentReadMapper;
     @Mock
-    private CommentCreateMapper commentCreateMapper;
+    private CommentCreateUpdateMapper commentCreateUpdateMapper;
     @InjectMocks
     private CommentService commentService;
 

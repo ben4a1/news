@@ -32,22 +32,26 @@ class NewsControllerIT extends IntegrationTestBase {
     void findById() {
         Optional<News> optionalNews = newsRepository.findById(1L);
         News news = optionalNews.orElse(null);
-        assert news != null;
+        assertThat(news).isNotNull();
         NewsReadDto expected = newsReadMapper.map(news);
+
         NewsReadDto actual = newsController.findById(1L);
+
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void checkCreateShouldReturnSameTitle() {
         NewsCreateUpdateDto newsDto = new NewsCreateUpdateDto("NEWS", "BIG NEWS");
+
         NewsReadDto savedNews = newsController.create(newsDto);
         String titleFromController = savedNews.title();
         Long id = savedNews.id();
         Optional<News> newsFromRepo = newsRepository.findById(id);
         News news = newsFromRepo.orElse(null);
-        assert news != null;
+        assertThat(news).isNotNull();
         String titleFromRepo = news.getTitle();
+
         assertThat(titleFromController).isEqualTo(titleFromRepo);
     }
 
@@ -55,23 +59,27 @@ class NewsControllerIT extends IntegrationTestBase {
     void update() {
         Optional<News> optionalBeforeUpdate = newsRepository.findById(2L);
         News newsBeforeUpdate = optionalBeforeUpdate.orElse(null);
-        assert newsBeforeUpdate != null;
+        assertThat(newsBeforeUpdate).isNotNull();
         String titleBeforeUpdate = newsBeforeUpdate.getTitle();
         NewsCreateUpdateDto newsCreateUpdateDto = new NewsCreateUpdateDto("another title", "same");
+
         newsController.update(2L, newsCreateUpdateDto);
         Optional<News> optionalAfterUpdate = newsRepository.findById(2L);
         News newsAfterUpdate = optionalAfterUpdate.orElse(null);
-        assert newsAfterUpdate != null;
+        assertThat(newsAfterUpdate).isNotNull();
         String titleAfterUpdate = newsBeforeUpdate.getTitle();
+
         assertThat(titleAfterUpdate).isNotEqualTo(titleBeforeUpdate);
     }
 
     @Test
     void delete() {
         int sizeBefore = newsRepository.findAll().size();
+
         newsController.delete(1L);
         newsController.delete(2L);
         int sizeAfter = newsRepository.findAll().size();
+        
         assertThat(sizeAfter).isLessThan(sizeBefore);
     }
 }

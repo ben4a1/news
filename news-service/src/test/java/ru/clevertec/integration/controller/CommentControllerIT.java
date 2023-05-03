@@ -40,55 +40,53 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkFindByIdShouldReturnUsername1() {
+        String expectedResult = "username1";
+
         var actualResult = commentController.findById(COMMENT_ID).username();
-        Comment expectedComment = listOf8Comments().get(Math.toIntExact(COMMENT_ID - 1));
-        var expectedResult = commentReadMapper.map(expectedComment).username();
+
         assertThat(actualResult).isEqualTo(expectedResult);
     }
 
     @Test
     void checkCreateShouldReturnIncreasedSize() {
-        int startSize = commentRepository.findAll().size();
+        int sizeBefore = commentRepository.findAll().size();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("sub", "username1", 1L, 1L);
+
         commentController.create(commentCreateUpdateDto);
         int sizeAfter = commentRepository.findAll().size();
-        assertThat(startSize).isLessThan(sizeAfter);
+
+        assertThat(sizeBefore).isLessThan(sizeAfter);
     }
 
     @Test
     void checkUpdateShouldReturnNotEquals() {
         Optional<Comment> optionalComment = commentRepository.findById(2L);
         Comment comment = optionalComment.orElse(null);
-        assert comment != null;
+        assertThat(comment).isNotNull();
         String subjectBeforeUpdate = comment.getSubject();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("super", "username1", 2L, 2L);
+
         commentController.update(2L, commentCreateUpdateDto);
         Optional<Comment> optionalCommentAfterUpdate = commentRepository.findById(2L);
         Comment commentAfterUpdate = optionalCommentAfterUpdate.orElse(null);
-        assert commentAfterUpdate != null;
+        assertThat(commentAfterUpdate).isNotNull();
         String subjectAfterUpdate = commentAfterUpdate.getSubject();
+
         assertThat(subjectBeforeUpdate).isNotEqualTo(subjectAfterUpdate);
     }
 
     @Test
     void checkDeleteShouldReturnDecreasedSize() {
         int sizeBefore = commentRepository.findAll().size();
+
         commentController.delete(1L);
         commentController.delete(2L);
         int sizeAfter = commentRepository.findAll().size();
+
         assertThat(sizeBefore).isGreaterThan(sizeAfter);
     }
 
-    private static List<Comment> listOf8Comments(){
-        ArrayList<Comment> list = new ArrayList<>();
-        list.add(comment1);
-        list.add(comment2);
-        list.add(comment3);
-        list.add(comment4);
-        list.add(comment5);
-        list.add(comment6);
-        list.add(comment7);
-        list.add(comment8);
-        return list;
+    private static List<Comment> listOf8Comments() {
+        return new ArrayList<>(List.of(comment1, comment2, comment3, comment4, comment5, comment6, comment7, comment8));
     }
 }

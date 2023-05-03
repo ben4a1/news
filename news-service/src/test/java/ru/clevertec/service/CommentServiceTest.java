@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.User;
@@ -13,6 +14,7 @@ import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.service.impl.CommentService;
 
+import java.lang.annotation.Retention;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -57,9 +59,13 @@ class CommentServiceTest {
         actualResult.ifPresent(actual -> assertThat(actual).isEqualTo(expectedResult));
     }
 
-    @Test
-    void save() {
-    }
+//    @Test
+//    void save() {
+//        CommentCreateUpdateDto commentUpdateToSave = new CommentCreateUpdateDto("s", "user", 1L, 2L);
+//        CommentReadDto commentReadDtoForMock = new CommentReadDto(1L, null, "s", "user");
+//        doReturn(commentReadDtoForMock).when(com)
+//        CommentReadDto commentReadDto = commentService.save(commentUpdateToSave);
+//    }
 
     @Test
     void update() {

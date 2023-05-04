@@ -60,6 +60,9 @@ class CommentServiceTest {
         CommentReadDto actualReadDto = commentService.save(commentCreateUpdateDto);
 
         assertThat(actualReadDto).isEqualTo(expectedReadDto);
+        verify(commentCreateUpdateMapper).map(commentCreateUpdateDto);
+        verify(commentRepository).save(comment);
+        verify(commentReadMapper).map(comment);
     }
 
     @Test
@@ -79,7 +82,7 @@ class CommentServiceTest {
     }
 
     @Test
-    void update() {
+    void checkUpdate() {
         CommentCreateUpdateDto createUpdateDto = getCommentCreateUpdateDto("alibaba");
         doReturn(Optional.of(comment1))
                 .when(commentRepository).findById(COMMENT_ID);

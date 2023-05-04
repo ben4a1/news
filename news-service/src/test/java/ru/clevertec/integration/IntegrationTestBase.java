@@ -13,15 +13,15 @@ import ru.clevertec.integration.annotation.IT;
 })
 public abstract class IntegrationTestBase {
 
-    private static final PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:14.1");
+    private static final PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:14.1");
 
     @BeforeAll
     static void runContainer(){
-        CONTAINER.start();
+        container.start();
     }
 
     @DynamicPropertySource
     static void postgresProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", CONTAINER::getJdbcUrl);
+        registry.add("spring.datasource.url", container::getJdbcUrl);
     }
 }

@@ -14,7 +14,6 @@ import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.service.impl.CommentService;
 
-import java.lang.annotation.Retention;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -23,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class CommentServiceTest {
+class cqCommentServiceTest {
 
     public static final Long COMMENT_ID = 1L;
     public static final LocalDateTime CREATION_TIME = now();
@@ -40,11 +39,7 @@ class CommentServiceTest {
 
     @Test
     void checkFindByIdShouldReturnEquals() {
-        Comment comment = Comment.builder()
-                .id(COMMENT_ID)
-                .creationTime(CREATION_TIME)
-                .subject(SUBJECT)
-                .user(User.builder().username(USERNAME).build()).build();
+        Comment comment = getComment();
 
         doReturn(Optional.of(comment))
                 .when(commentRepository).findById(COMMENT_ID);
@@ -59,6 +54,7 @@ class CommentServiceTest {
         actualResult.ifPresent(actual -> assertThat(actual).isEqualTo(expectedResult));
     }
 
+
 //    @Test
 //    void save() {
 //        CommentCreateUpdateDto commentUpdateToSave = new CommentCreateUpdateDto("s", "user", 1L, 2L);
@@ -66,7 +62,6 @@ class CommentServiceTest {
 //        doReturn(commentReadDtoForMock).when(com)
 //        CommentReadDto commentReadDto = commentService.save(commentUpdateToSave);
 //    }
-
     @Test
     void update() {
     }
@@ -77,5 +72,14 @@ class CommentServiceTest {
 
     @Test
     void delete() {
+    }
+
+    private static Comment getComment() {
+        return Comment.builder()
+                .id(COMMENT_ID)
+                .creationTime(CREATION_TIME)
+                .subject(SUBJECT)
+                .user(User.builder().username(USERNAME).build())
+                .build();
     }
 }

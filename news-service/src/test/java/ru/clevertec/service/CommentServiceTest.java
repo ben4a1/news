@@ -22,12 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class cqCommentServiceTest {
+class CommentServiceTest {
 
     public static final Long COMMENT_ID = 1L;
-    public static final LocalDateTime CREATION_TIME = now();
-    public static final String SUBJECT = "Pugacheva reacted to the death of rabbit";
+    private static final Long NEWS_ID = 1L;
+    private static final Long USER_ID = 1L;
     private static final String USERNAME = "Max";
+    public static final String SUBJECT = "Pugacheva reacted to the death of rabbit";
+    public static final LocalDateTime CREATION_TIME = now();
     @Mock
     private CommentRepository commentRepository;
     @Mock
@@ -39,11 +41,13 @@ class cqCommentServiceTest {
 
     @Test
     void checkFindByIdShouldReturnEquals() {
-        Comment comment = getComment();
-
+        Comment comment = Comment.builder()
+                .id(COMMENT_ID)
+                .creationTime(CREATION_TIME)
+                .subject(SUBJECT)
+                .user(User.builder().username(USERNAME).build()).build();
         doReturn(Optional.of(comment))
                 .when(commentRepository).findById(COMMENT_ID);
-
         doReturn(new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME))
                 .when(commentReadMapper).map(comment);
 
@@ -54,14 +58,23 @@ class cqCommentServiceTest {
         actualResult.ifPresent(actual -> assertThat(actual).isEqualTo(expectedResult));
     }
 
+    @Test
+    void checkSaveShouldReturnEquals() {
+        Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
+        CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
+        CommentReadDto expectedReadDto = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);
+        doReturn(comment)
+                .when(commentCreateUpdateMapper).map(commentCreateUpdateDto);
+        doReturn(comment)
+                .when(commentRepository).save(comment);
+        doReturn(expectedReadDto)
+                .when(commentReadMapper).map(comment);
 
-//    @Test
-//    void save() {
-//        CommentCreateUpdateDto commentUpdateToSave = new CommentCreateUpdateDto("s", "user", 1L, 2L);
-//        CommentReadDto commentReadDtoForMock = new CommentReadDto(1L, null, "s", "user");
-//        doReturn(commentReadDtoForMock).when(com)
-//        CommentReadDto commentReadDto = commentService.save(commentUpdateToSave);
-//    }
+        CommentReadDto actualReadDto = commentService.save(commentCreateUpdateDto);
+
+        assertThat(actualReadDto).isEqualTo(expectedReadDto);
+    }
+
     @Test
     void update() {
     }
@@ -72,14 +85,5 @@ class cqCommentServiceTest {
 
     @Test
     void delete() {
-    }
-
-    private static Comment getComment() {
-        return Comment.builder()
-                .id(COMMENT_ID)
-                .creationTime(CREATION_TIME)
-                .subject(SUBJECT)
-                .user(User.builder().username(USERNAME).build())
-                .build();
     }
 }

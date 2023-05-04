@@ -1,8 +1,6 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.controller.NewsController;
 import ru.clevertec.dto.NewsCreateUpdateDto;
@@ -12,15 +10,13 @@ import ru.clevertec.integration.IntegrationTestBase;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.clevertec.util.UtilClass.listOf4News;
-import static ru.clevertec.util.UtilClass.news1;
-import static ru.clevertec.util.UtilClass.news2;
-import static ru.clevertec.util.UtilClass.news3;
 
+/**
+ * sql/data.sql : 4 News, 4 Users, 8 Comments
+ */
 @RequiredArgsConstructor
 class NewsControllerIT extends IntegrationTestBase {
 
@@ -30,9 +26,6 @@ class NewsControllerIT extends IntegrationTestBase {
 
     @Test
     void checkFindAllShouldReturnSameSize() {
-        newsRepository.save(news1);
-        newsRepository.save(news2);
-        newsRepository.save(news3);
         int expected = newsRepository.findAll().size();
 
         int actual = newsController.findAll().size();
@@ -42,9 +35,6 @@ class NewsControllerIT extends IntegrationTestBase {
 
     @Test
     void findById() {
-        newsRepository.save(news1);
-        newsRepository.save(news2);
-        newsRepository.save(news3);
         Optional<News> optionalNews = newsRepository.findById(1L);
         News news = optionalNews.orElse(null);
         assertThat(news).isNotNull();
@@ -72,8 +62,6 @@ class NewsControllerIT extends IntegrationTestBase {
 
     @Test
     void update() {
-        newsRepository.save(news1);
-        newsRepository.save(news2);
         Optional<News> optionalBeforeUpdate = newsRepository.findById(2L);
         News newsBeforeUpdate = optionalBeforeUpdate.orElse(null);
         assertThat(newsBeforeUpdate).isNotNull();
@@ -91,9 +79,6 @@ class NewsControllerIT extends IntegrationTestBase {
 
     @Test
     void delete() {
-        newsRepository.save(news1);
-        newsRepository.save(news2);
-        newsRepository.save(news3);
         int sizeBefore = newsRepository.findAll().size();
 
         newsController.delete(1L);

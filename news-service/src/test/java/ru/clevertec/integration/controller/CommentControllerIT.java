@@ -1,12 +1,14 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.entity.Comment;
+import ru.clevertec.entity.News;
+import ru.clevertec.entity.User;
 import ru.clevertec.integration.IntegrationTestBase;
+import ru.clevertec.model.Role;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.repository.NewsRepository;
 import ru.clevertec.repository.UserRepository;
@@ -16,15 +18,8 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.clevertec.util.UtilClass.PASSWORD;
 import static ru.clevertec.util.UtilClass.SUBJECT;
-import static ru.clevertec.util.UtilClass.news1;
-import static ru.clevertec.util.UtilClass.news2;
-import static ru.clevertec.util.UtilClass.news3;
-import static ru.clevertec.util.UtilClass.news4;
-import static ru.clevertec.util.UtilClass.username1Admin;
-import static ru.clevertec.util.UtilClass.username2Journalist;
-import static ru.clevertec.util.UtilClass.username3Journalist;
-import static ru.clevertec.util.UtilClass.username4Subscriber;
 
 @RequiredArgsConstructor
 class CommentControllerIT extends IntegrationTestBase {
@@ -34,20 +29,12 @@ class CommentControllerIT extends IntegrationTestBase {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
 
-    @BeforeEach
-    void prepareDatabase() {
-        newsRepository.save(news1);
-        newsRepository.save(news2);
-        newsRepository.save(news3);
-        newsRepository.save(news4);
-        userRepository.save(username1Admin);
-        userRepository.save(username2Journalist);
-        userRepository.save(username3Journalist);
-        userRepository.save(username4Subscriber);
-    }
-
     @Test
     void checkFindAllShouldReturnSameSize() {
+        newsRepository.save(getNews("Title1"));
+        newsRepository.save(getNews("Hibernate1"));
+        userRepository.save(getUser("username1", Role.ADMIN));
+        userRepository.save(getUser("username2", Role.JOURNALIST));
         commentRepository.saveAll(Arrays.asList(getComment(), getComment(), getComment()));
         int expected = commentRepository.findAll().size();
 
@@ -58,9 +45,13 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkFindByIdShouldReturnUsername1() {
+        newsRepository.save(getNews("Title2"));
+        newsRepository.save(getNews("Hibernate2"));
+        userRepository.save(getUser("username3", Role.ADMIN));
+        userRepository.save(getUser("username4", Role.JOURNALIST));
         Comment comment = commentRepository.save(getComment());
         Long commentId = comment.getId();
-        String expectedResult = "username1";
+        String expectedResult = "username3";
 
         var actualResult = commentController.findById(commentId).username();
 
@@ -69,6 +60,10 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkCreateShouldReturnIncreasedSize() {
+        newsRepository.save(getNews("Title3"));
+        newsRepository.save(getNews("Hibernate3"));
+        userRepository.save(getUser("username5", Role.ADMIN));
+        userRepository.save(getUser("username6", Role.JOURNALIST));
         commentRepository.saveAll(Arrays.asList(getComment(), getComment()));
         int sizeBefore = commentRepository.findAll().size();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("sub", "username1", 1L, 1L);
@@ -81,6 +76,10 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkUpdateShouldReturnNotEquals() {
+        newsRepository.save(getNews("Title4"));
+        newsRepository.save(getNews("Hibernate4"));
+        userRepository.save(getUser("username7", Role.ADMIN));
+        userRepository.save(getUser("username8", Role.JOURNALIST));
         commentRepository.saveAll(Arrays.asList(getComment(), getComment()));
         Optional<Comment> optionalComment = commentRepository.findById(2L);
         Comment comment = optionalComment.orElse(null);
@@ -99,11 +98,15 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkDeleteShouldReturnDecreasedSize() {
+        newsRepository.save(getNews("Title5"));
+        newsRepository.save(getNews("Hibernate5"));
+        userRepository.save(getUser("username9", Role.ADMIN));
+        userRepository.save(getUser("username10", Role.JOURNALIST));
         commentRepository.saveAll(Arrays.asList(getComment(), getComment(), getComment(), getComment()));
         int sizeBefore = commentRepository.findAll().size();
 
+        commentController.delete(1L);
         commentController.delete(2L);
-        commentController.delete(3L);
         int sizeAfter = commentRepository.findAll().size();
 
         assertThat(sizeAfter).isLessThan(sizeBefore);
@@ -111,9 +114,17 @@ class CommentControllerIT extends IntegrationTestBase {
 
     private Comment getComment() {
         return Comment.builder().subject(SUBJECT)
-                .user(username1Admin)
+                .user(userRepository.findAll().stream().findAny().orElse(null))
                 .creationTime(now())
-                .news(news1)
+                .news(newsRepository.findAll().stream().findAny().orElse(null))
                 .build();
+    }
+
+    private News getNews(String title) {
+        return News.builder().creationTime(now()).title(title).subject(SUBJECT).build();
+    }
+
+    private User getUser(String username, Role role) {
+        return User.builder().username(username).password(PASSWORD).role(role).build();
     }
 }

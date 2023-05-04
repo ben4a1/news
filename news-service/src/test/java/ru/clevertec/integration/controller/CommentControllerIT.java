@@ -1,8 +1,10 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.entity.Comment;
@@ -31,7 +33,6 @@ class CommentControllerIT extends IntegrationTestBase {
 
     private final CommentController commentController;
     private final CommentRepository commentRepository;
-    private final CommentReadMapper commentReadMapper;
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
     private List<Comment> comments;

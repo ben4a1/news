@@ -46,7 +46,7 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Test
-    void checkSaveShouldReturnEquals() {
+    void checkSave() {
         Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
         CommentReadDto expectedReadDto = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);

@@ -25,12 +25,12 @@ public class UtilClass {
     public static User username3Journalist = User.builder().username("username3").password(PASSWORD).role(Role.JOURNALIST).build();
     public static User username4Subscriber = User.builder().username("username4").password(PASSWORD).role(Role.SUBSCRIBER).build();
 
-    public static Comment comment1 = Comment.builder().subject(SUBJECT)
+    public static Comment comment1 = Comment.builder().id(1L).subject(SUBJECT)
             .user(username1Admin)
             .creationTime(now())
             .news(news1)
             .build();
-    public static Comment comment2 = Comment.builder().subject(SUBJECT)
+    public static Comment comment2 = Comment.builder().id(2L).subject(SUBJECT)
             .user(username2Journalist)
             .creationTime(now())
             .news(news1)

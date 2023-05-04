@@ -41,6 +41,28 @@ class CommentServiceTest {
     private CommentService commentService;
 
     @Test
+    void checkSaveShouldReturnEquals() {
+        Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
+        CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
+        CommentReadDto expectedReadDto = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);
+        doReturn(comment)
+                .when(commentCreateUpdateMapper).map(commentCreateUpdateDto);
+        doReturn(comment)
+                .when(commentRepository).save(comment);
+        doReturn(expectedReadDto)
+                .when(commentReadMapper).map(comment);
+
+        CommentReadDto actualReadDto = commentService.save(commentCreateUpdateDto);
+
+        assertThat(actualReadDto).isEqualTo(expectedReadDto);
+    }
+
+    @Test
+    void update() {
+
+    }
+
+    @Test
     void checkFindByIdShouldReturnEquals() {
         Comment comment = Comment.builder()
                 .id(COMMENT_ID)
@@ -62,27 +84,6 @@ class CommentServiceTest {
     @Test
     void findAll() {
 
-    }
-
-    @Test
-    void checkSaveShouldReturnEquals() {
-        Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
-        CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
-        CommentReadDto expectedReadDto = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);
-        doReturn(comment)
-                .when(commentCreateUpdateMapper).map(commentCreateUpdateDto);
-        doReturn(comment)
-                .when(commentRepository).save(comment);
-        doReturn(expectedReadDto)
-                .when(commentReadMapper).map(comment);
-
-        CommentReadDto actualReadDto = commentService.save(commentCreateUpdateDto);
-
-        assertThat(actualReadDto).isEqualTo(expectedReadDto);
-    }
-
-    @Test
-    void update() {
     }
 
     @Test

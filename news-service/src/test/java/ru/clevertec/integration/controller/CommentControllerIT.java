@@ -1,24 +1,22 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.integration.IntegrationTestBase;
-import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.repository.NewsRepository;
 import ru.clevertec.repository.UserRepository;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.clevertec.util.UtilClass.listOf8Comments;
+import static ru.clevertec.util.UtilClass.SUBJECT;
 import static ru.clevertec.util.UtilClass.news1;
 import static ru.clevertec.util.UtilClass.news2;
 import static ru.clevertec.util.UtilClass.news3;
@@ -35,7 +33,6 @@ class CommentControllerIT extends IntegrationTestBase {
     private final CommentRepository commentRepository;
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
-    private List<Comment> comments;
 
     @BeforeEach
     void prepareDatabase() {
@@ -47,15 +44,11 @@ class CommentControllerIT extends IntegrationTestBase {
         userRepository.save(username2Journalist);
         userRepository.save(username3Journalist);
         userRepository.save(username4Subscriber);
-        comments = listOf8Comments();
-
     }
 
     @Test
     void checkFindAllShouldReturnSameSize() {
-        commentRepository.save(comments.get(1));
-        commentRepository.save(comments.get(2));
-        commentRepository.save(comments.get(3));
+        commentRepository.saveAll(Arrays.asList(getComment(), getComment(), getComment()));
         int expected = commentRepository.findAll().size();
 
         int actual = commentController.findAll().size();
@@ -65,9 +58,7 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkFindByIdShouldReturnUsername1() {
-        Comment comment = comments.stream().filter(com -> "username1".equalsIgnoreCase(com.getUser().getUsername())).findAny().orElse(null);
-        assertThat(comment).isNotNull();
-        commentRepository.save(comment);
+        Comment comment = commentRepository.save(getComment());
         Long commentId = comment.getId();
         String expectedResult = "username1";
 
@@ -78,8 +69,7 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkCreateShouldReturnIncreasedSize() {
-        commentRepository.save(comments.get(0));
-        commentRepository.save(comments.get(1));
+        commentRepository.saveAll(Arrays.asList(getComment(), getComment()));
         int sizeBefore = commentRepository.findAll().size();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto("sub", "username1", 1L, 1L);
 
@@ -91,8 +81,7 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkUpdateShouldReturnNotEquals() {
-        commentRepository.save(comments.get(0));
-        commentRepository.save(comments.get(1));
+        commentRepository.saveAll(Arrays.asList(getComment(), getComment()));
         Optional<Comment> optionalComment = commentRepository.findById(2L);
         Comment comment = optionalComment.orElse(null);
         assertThat(comment).isNotNull();
@@ -110,12 +99,7 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkDeleteShouldReturnDecreasedSize() {
-        commentRepository.save(comments.get(0));
-        commentRepository.save(comments.get(1));
-        commentRepository.save(comments.get(2));
-        commentRepository.save(comments.get(3));
-        commentRepository.save(comments.get(4));
-        commentRepository.save(comments.get(5));
+        commentRepository.saveAll(Arrays.asList(getComment(), getComment(), getComment(), getComment()));
         int sizeBefore = commentRepository.findAll().size();
 
         commentController.delete(2L);
@@ -123,5 +107,13 @@ class CommentControllerIT extends IntegrationTestBase {
         int sizeAfter = commentRepository.findAll().size();
 
         assertThat(sizeAfter).isLessThan(sizeBefore);
+    }
+
+    private Comment getComment() {
+        return Comment.builder().subject(SUBJECT)
+                .user(username1Admin)
+                .creationTime(now())
+                .news(news1)
+                .build();
     }
 }

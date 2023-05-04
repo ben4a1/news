@@ -8,9 +8,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import ru.clevertec.integration.annotation.IT;
 
 @IT
-@Sql({
-        "classpath:sql/data.sql"
-})
 public abstract class IntegrationTestBase {
 
     private static final PostgreSQLContainer<?> CONTAINER = new PostgreSQLContainer<>("postgres:14.1");

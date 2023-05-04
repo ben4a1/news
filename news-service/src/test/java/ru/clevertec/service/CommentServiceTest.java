@@ -13,6 +13,7 @@ import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.service.impl.CommentService;
+import ru.clevertec.util.UtilClass;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -59,6 +60,11 @@ class CommentServiceTest {
     }
 
     @Test
+    void findAll() {
+
+    }
+
+    @Test
     void checkSaveShouldReturnEquals() {
         Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
@@ -77,10 +83,6 @@ class CommentServiceTest {
 
     @Test
     void update() {
-    }
-
-    @Test
-    void findAll() {
     }
 
     @Test

@@ -18,7 +18,7 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static ru.clevertec.util.UtilClass.SUBJECT;
+import static ru.clevertec.util.EntitiesGenerator.SUBJECT;
 
 /**
  * sql/data.sql : 4 News, 4 Users, 8 Comments
@@ -59,8 +59,8 @@ class CommentControllerIT extends IntegrationTestBase {
     void checkCreateShouldReturnIncreasedSize() {
         int countToSave = 1;
         int sizeBefore = commentRepository.findAll().size();
-        News news = newsRepository.findAll().stream().findAny().orElse(null);
-        User user = userRepository.findAll().stream().findAny().orElse(null);
+        News news = newsRepository.findById(1L).orElse(null);
+        User user = userRepository.findById(1L).orElse(null);
         assertAll("news and user should be not null",
                 () -> assertThat(news).isNotNull(),
                 () -> assertThat(user).isNotNull()
@@ -76,9 +76,9 @@ class CommentControllerIT extends IntegrationTestBase {
 
     @Test
     void checkUpdateShouldReturnNotEquals() {
-        News news = newsRepository.findAll().stream().findAny().orElse(null);
-        User user = userRepository.findAll().stream().findAny().orElse(null);
-        Comment comment = commentRepository.findAll().stream().findAny().orElse(null);
+        News news = newsRepository.findById(1L).orElse(null);
+        User user = userRepository.findById(1L).orElse(null);
+        Comment comment = commentRepository.findById(1L).orElse(null);
         assertAll("news and user should be not null",
                 () -> assertThat(news).isNotNull(),
                 () -> assertThat(user).isNotNull(),

@@ -1,19 +1,15 @@
 package ru.clevertec.mapper;
 
-import com.github.dockerjava.zerodep.shaded.org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.repository.NewsRepository;
 import ru.clevertec.repository.UserRepository;
-import ru.clevertec.util.UtilClass;
 
 import java.util.Optional;
 
@@ -21,10 +17,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.clevertec.util.UtilClass.SUBJECT;
-import static ru.clevertec.util.UtilClass.news1;
-import static ru.clevertec.util.UtilClass.username1Admin;
+import static ru.clevertec.util.EntitiesGenerator.SUBJECT;
+import static ru.clevertec.util.EntitiesGenerator.getComment;
+import static ru.clevertec.util.EntitiesGenerator.getNews;
+import static ru.clevertec.util.EntitiesGenerator.getUser;
 
 @ExtendWith(MockitoExtension.class)
 class CommentCreateUpdateMapperTest {
@@ -42,9 +38,9 @@ class CommentCreateUpdateMapperTest {
     @Test
     void checkMap() {
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
-        when(userRepository.findByUsername(commentCreateUpdateDto.username()))
-                .thenReturn(username1Admin);
-        doReturn(Optional.of(news1))
+        doReturn(getUser())
+                .when(userRepository).findByUsername(commentCreateUpdateDto.username());
+        doReturn(Optional.of(getNews()))
                 .when(newsRepository).findById(commentCreateUpdateDto.newsId());
 
         Comment actualResult = commentCreateUpdateMapper.map(commentCreateUpdateDto);
@@ -61,7 +57,7 @@ class CommentCreateUpdateMapperTest {
     void checkMapWithTwoParams() {
         String anotherSubject = "anotherSubject";
         CommentCreateUpdateDto from = new CommentCreateUpdateDto(anotherSubject, USERNAME, 1L, 1L);
-        Comment to = UtilClass.comment1;
+        Comment to = getComment();
         String subjectBefore = to.getSubject();
 
         commentCreateUpdateMapper.map(from, to);

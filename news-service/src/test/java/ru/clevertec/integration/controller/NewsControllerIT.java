@@ -15,8 +15,8 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.clevertec.util.UtilClass.SUBJECT;
-import static ru.clevertec.util.UtilClass.TITLE;
+import static ru.clevertec.util.EntitiesGenerator.SUBJECT;
+import static ru.clevertec.util.EntitiesGenerator.TITLE;
 
 /**
  * sql/data.sql : 4 News, 4 Users, 8 Comments
@@ -69,9 +69,8 @@ class NewsControllerIT extends IntegrationTestBase {
 
     @Test
     void checkUpdateShouldReturnNotEquals() {
-        News news = newsRepository.findAll().stream().findAny().orElse(null);
-        assertThat(news).isNotNull();
-        Long newsId = news.getId();
+        Long newsId = 2L;
+        News news = newsRepository.findById(newsId).orElse(null);
         String newsTitleBefore = news.getTitle();
         NewsCreateUpdateDto newsCreateUpdateDto = new NewsCreateUpdateDto("another title", "same");
 
@@ -91,7 +90,7 @@ class NewsControllerIT extends IntegrationTestBase {
         int sizeBefore = newsRepository.findAll().size();
         int expectedSize = sizeBefore - countToDelete;
 
-        news.forEach(n -> newsController.delete(n.getId()));
+        news.forEach(it -> newsController.delete(it.getId()));
         int actualSize = newsRepository.findAll().size();
 
         assertThat(actualSize).isEqualTo(expectedSize);

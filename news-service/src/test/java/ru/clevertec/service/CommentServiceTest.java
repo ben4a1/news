@@ -8,36 +8,31 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
-import ru.clevertec.entity.User;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 import ru.clevertec.service.impl.CommentService;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.clevertec.util.UtilClass.comment1;
-import static ru.clevertec.util.UtilClass.comment2;
+import static ru.clevertec.util.EntitiesGenerator.COMMENT_ID;
+import static ru.clevertec.util.EntitiesGenerator.CREATION_TIME;
+import static ru.clevertec.util.EntitiesGenerator.NEWS_ID;
+import static ru.clevertec.util.EntitiesGenerator.SUBJECT;
+import static ru.clevertec.util.EntitiesGenerator.USERNAME;
+import static ru.clevertec.util.EntitiesGenerator.USER_ID;
+import static ru.clevertec.util.EntitiesGenerator.getComment;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
 
-    public static final Long COMMENT_ID = 1L;
-    private static final Long NEWS_ID = 1L;
-    private static final Long USER_ID = 1L;
-    private static final String USERNAME = "Max";
-    public static final String SUBJECT = "Pugacheva reacted to the death of rabbit";
-    public static final LocalDateTime CREATION_TIME = LocalDateTime.of(2022, 10, 9, 12, 12);
     @Mock
     private CommentRepository commentRepository;
     @Mock
@@ -49,7 +44,7 @@ class CommentServiceTest {
 
     @Test
     void checkSave() {
-        Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
+        Comment comment = getComment();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
         CommentReadDto expectedReadDto = getCommentReadDto(USERNAME);
         doReturn(comment)
@@ -72,21 +67,22 @@ class CommentServiceTest {
         String username = "alibaba";
         CommentCreateUpdateDto createUpdateDto = getCommentCreateUpdateDto(username);
         CommentReadDto commentReadDto = getCommentReadDto(username);
-        doReturn(Optional.of(comment1))
+        Comment comment = getComment();
+        doReturn(Optional.of(comment))
                 .when(commentRepository).findById(COMMENT_ID);
-        doReturn(comment1)
-                .when(commentCreateUpdateMapper).map(createUpdateDto, comment1);
-        when(commentRepository.saveAndFlush(comment1))
-                .thenReturn(comment1);
+        doReturn(comment)
+                .when(commentCreateUpdateMapper).map(createUpdateDto, comment);
+        doReturn(comment)
+                .when(commentRepository).saveAndFlush(comment);
         doReturn(commentReadDto)
-                .when(commentReadMapper).map(comment1);
+                .when(commentReadMapper).map(comment);
 
         commentService.update(COMMENT_ID, createUpdateDto);
 
         verify(commentRepository).findById(COMMENT_ID);
-        verify(commentRepository).saveAndFlush(comment1);
-        verify(commentCreateUpdateMapper).map(createUpdateDto, comment1);
-        verify(commentReadMapper).map(Optional.of(comment1).get());
+        verify(commentRepository).saveAndFlush(comment);
+        verify(commentCreateUpdateMapper).map(createUpdateDto, comment);
+        verify(commentReadMapper).map(Optional.of(comment).get());
     }
 
     @Test
@@ -107,7 +103,7 @@ class CommentServiceTest {
 
     @Test
     void checkFindAll() {
-        List<Comment> comments = Arrays.asList(comment1, comment2);
+        List<Comment> comments = Arrays.asList(getComment(), getComment());
         doReturn(comments)
                 .when(commentRepository).findAll();
         doReturn(getCommentReadDto("username"))
@@ -122,20 +118,13 @@ class CommentServiceTest {
 
     @Test
     void checkDelete() {
-        doReturn(Optional.of(comment1))
+        Comment comment = getComment();
+        doReturn(Optional.of(comment))
                 .when(commentRepository).findById(COMMENT_ID);
 
-        commentService.delete(comment1.getId());
+        commentService.delete(comment.getId());
 
-        verify(commentRepository).delete(comment1);
-    }
-
-    private static Comment getComment() {
-        return Comment.builder()
-                .id(COMMENT_ID)
-                .creationTime(CREATION_TIME)
-                .subject(SUBJECT)
-                .user(User.builder().username(USERNAME).build()).build();
+        verify(commentRepository).delete(comment);
     }
 
     private CommentCreateUpdateDto getCommentCreateUpdateDto(String username) {

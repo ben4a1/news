@@ -13,30 +13,24 @@ import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
 import ru.clevertec.service.impl.NewsService;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ru.clevertec.util.UtilClass.news1;
-import static ru.clevertec.util.UtilClass.news2;
-import static ru.clevertec.util.UtilClass.news3;
+import static ru.clevertec.util.EntitiesGenerator.NEWS_ID;
+import static ru.clevertec.util.EntitiesGenerator.NOW;
+import static ru.clevertec.util.EntitiesGenerator.SUBJECT;
+import static ru.clevertec.util.EntitiesGenerator.TITLE;
+import static ru.clevertec.util.EntitiesGenerator.getNews;
 
 @ExtendWith(MockitoExtension.class)
 class NewsServiceTest {
 
-    private static final Long NEWS_ID = 1L;
-    private static final String TITLE = "title";
-    private static final String SUBJECT = "subject";
-    private static final LocalDateTime NOW = now();
-    public static final LocalDateTime CREATION_TIME = LocalDateTime.of(2022, 10, 9, 12, 12);
     @Mock
     private NewsRepository newsRepository;
     @Mock
@@ -48,8 +42,7 @@ class NewsServiceTest {
 
     @Test
     void checkSave() {
-        News news = News.builder().id(NEWS_ID).creationTime(NOW)
-                .title(TITLE).subject(SUBJECT).build();
+        News news = getNews();
         NewsCreateUpdateDto newsCreateUpdateDto = getCreateUpdateDto();
         NewsReadDto expectedReadDto = getReadDto();
         doReturn(news)
@@ -69,23 +62,24 @@ class NewsServiceTest {
 
     @Test
     void checkUpdate() {
+        News news = getNews();
         NewsCreateUpdateDto createUpdateDto = getCreateUpdateDto();
         NewsReadDto readDto = getReadDto();
-        doReturn(Optional.of(news1))
+        doReturn(Optional.of(news))
                 .when(newsRepository).findById(NEWS_ID);
-        doReturn(news1)
-                .when(newsCreateUpdateMapper).map(createUpdateDto, news1);
-        when(newsRepository.saveAndFlush(news1))
-                .thenReturn(news1);
+        doReturn(news)
+                .when(newsCreateUpdateMapper).map(createUpdateDto, news);
+        doReturn(news)
+                .when(newsRepository).saveAndFlush(news);
         doReturn(readDto)
-                .when(newsReadMapper).map(news1);
+                .when(newsReadMapper).map(news);
 
         newsService.update(NEWS_ID, createUpdateDto);
 
         verify(newsRepository).findById(NEWS_ID);
-        verify(newsRepository).saveAndFlush(news1);
-        verify(newsCreateUpdateMapper).map(createUpdateDto, news1);
-        verify(newsReadMapper).map(news1);
+        verify(newsRepository).saveAndFlush(news);
+        verify(newsCreateUpdateMapper).map(createUpdateDto, news);
+        verify(newsReadMapper).map(news);
     }
 
     @Test
@@ -107,7 +101,7 @@ class NewsServiceTest {
 
     @Test
     void checkFindAll() {
-        List<News> newsList = Arrays.asList(news1, news2, news3);
+        List<News> newsList = Arrays.asList(getNews(), getNews(), getNews());
         doReturn(newsList)
                 .when(newsRepository).findAll();
         doReturn(getReadDto())
@@ -123,21 +117,14 @@ class NewsServiceTest {
 
     @Test
     void checkDelete() {
-        doReturn(Optional.of(news1))
-                .when(newsRepository).findById(NEWS_ID);
+        Long newsId = 1L;
+        News news = getNews();
+        doReturn(Optional.of(news))
+                .when(newsRepository).findById(newsId);
 
-        newsService.delete(NEWS_ID);
+        newsService.delete(newsId);
 
-        verify(newsRepository).delete(news1);
-    }
-
-    private News getNews() {
-        return News.builder()
-                .id(NEWS_ID)
-                .creationTime(CREATION_TIME)
-                .title(TITLE)
-                .subject(SUBJECT)
-                .build();
+        verify(newsRepository).delete(news);
     }
 
     private NewsCreateUpdateDto getCreateUpdateDto() {

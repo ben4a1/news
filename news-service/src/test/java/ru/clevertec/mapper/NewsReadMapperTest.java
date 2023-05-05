@@ -1,27 +1,21 @@
 package ru.clevertec.mapper;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
 import ru.clevertec.mapper.impl.NewsReadMapper;
-import ru.clevertec.util.UtilClass;
+import ru.clevertec.util.EntitiesGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class NewsReadMapperTest {
 
-    private NewsReadMapper newsReadMapper;
-
-    @BeforeEach
-    void prepare() {
-        newsReadMapper = new NewsReadMapper();
-    }
+    private final NewsReadMapper newsReadMapper = new NewsReadMapper();
 
     @Test
     void map() {
-        News news = UtilClass.news2;
+        News news = EntitiesGenerator.getNews();
 
         NewsReadDto newsReadDto = newsReadMapper.map(news);
 
@@ -32,6 +26,5 @@ class NewsReadMapperTest {
                 () -> assertThat(newsReadDto.subject()).isEqualTo(news.getSubject()),
                 () -> assertThat(newsReadDto.comments()).isEqualTo(news.getComments())
         );
-
     }
 }

@@ -20,7 +20,7 @@ public class UtilClass {
     public static News news3 = News.builder().creationTime(now()).title(TITLE).subject(SUBJECT).build();
     public static News news4 = News.builder().creationTime(now()).title(TITLE).subject(SUBJECT).build();
 
-    public static User username1Admin = User.builder().username("username1").password(PASSWORD).role(Role.ADMIN).build();
+    public static User username1Admin = User.builder().id(1L).username("username1").password(PASSWORD).role(Role.ADMIN).build();
     public static User username2Journalist = User.builder().username("username2").password(PASSWORD).role(Role.JOURNALIST).build();
     public static User username3Journalist = User.builder().username("username3").password(PASSWORD).role(Role.JOURNALIST).build();
     public static User username4Subscriber = User.builder().username("username4").password(PASSWORD).role(Role.SUBSCRIBER).build();

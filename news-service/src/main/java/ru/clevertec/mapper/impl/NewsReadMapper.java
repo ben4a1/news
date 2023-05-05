@@ -13,7 +13,7 @@ public class NewsReadMapper implements Mapper<News, NewsReadDto> {
         return new NewsReadDto(object.getId(),
                 object.getCreationTime(),
                 object.getTitle(),
-                object.getTitle(),
+                object.getSubject(),
                 object.getComments());
     }
 }

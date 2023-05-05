@@ -5,6 +5,8 @@ plugins {
     id 'io.freefair.lombok' version '8.0.1'
 }
 
+apply from: 'version.gradle'
+
 group = 'ru.clevertec'
 sourceCompatibility = '17'
 
@@ -20,9 +22,10 @@ dependencies {
     implementation 'com.querydsl:querydsl-jpa'
     annotationProcessor 'com.querydsl:querydsl-apt'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }
 

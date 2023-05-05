@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
-import ru.clevertec.mapper.impl.NewsCreateMapper;
+import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
 
@@ -19,12 +19,12 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsReadMapper newsReadMapper;
-    private final NewsCreateMapper newsCreateMapper;
+    private final NewsCreateUpdateMapper newsCreateUpdateMapper;
 
     @Transactional
     public NewsReadDto save(NewsCreateUpdateDto news) {
         return Optional.of(news)
-                .map(newsCreateMapper::map)
+                .map(newsCreateUpdateMapper::map)
                 .map(newsRepository::save)
                 .map(newsReadMapper::map)
                 .orElseThrow();
@@ -34,7 +34,7 @@ public class NewsService {
     public Optional<NewsReadDto> update(Long id, NewsCreateUpdateDto news) {
         return newsRepository.findById(id)
                 .map(entity ->
-                        newsCreateMapper.map(news, entity))
+                        newsCreateUpdateMapper.map(news, entity))
                 .map(newsRepository::saveAndFlush)
                 .map(newsReadMapper::map);
     }

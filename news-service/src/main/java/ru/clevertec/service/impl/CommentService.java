@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
-import ru.clevertec.mapper.impl.CommentCreateMapper;
+import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
 
@@ -19,12 +19,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
-    private final CommentCreateMapper commentCreateMapper;
+    private final CommentCreateUpdateMapper commentCreateUpdateMapper;
 
     @Transactional
     public CommentReadDto save(CommentCreateUpdateDto comment) {
         return Optional.of(comment)
-                .map(commentCreateMapper::map)
+                .map(commentCreateUpdateMapper::map)
                 .map(commentRepository::save)
                 .map(commentReadMapper::map)
                 .orElseThrow();
@@ -34,7 +34,7 @@ public class CommentService {
     public Optional<CommentReadDto> update(Long id, CommentCreateUpdateDto comment) {
         return commentRepository.findById(id)
                 .map(entity ->
-                        commentCreateMapper.map(comment, entity))
+                        commentCreateUpdateMapper.map(comment, entity))
                 .map(commentRepository::saveAndFlush)
                 .map(commentReadMapper::map);
     }

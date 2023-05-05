@@ -32,14 +32,16 @@ VALUES (1, '2012-01-01 09:03:00-00',
         'The US presidential administration has confirmed receipt of a $102,000 cash transfer from the United Nations paid for Donald Trump''s stand-up comedy speech to the General Assembly. The President on your Twitter has already announced his intention to send all the money from this speech, left over after taxes and pension contributions, to charity.',
         'Donald Trump received $102,000 for a stand-up speech at the UN General Assembly'),
        (14, '2020-01-01 10:00:00-05',
-        'subject',
-        'title'),
-       (15, '2021-01-01 14:00:00-05', 'subject', 'title'),
-       (16, '2021-01-01 10:00:00-05', 'subject', 'title'),
-       (17, '2022-01-01 10:05:00-04', 'subject', 'title'),
-       (18, '2022-01-01 10:00:00-05', 'subject', 'title'),
-       (19, '2023-01-01 10:00:00-05', 'subject', 'title'),
-       (20, '2023-01-01 10:00:00-05', 'subject', 'title');
+        'At a September 27 press conference, Turkmen President Ko Lastname made an unexpected statement. He spoke about the country''s plans to join NATO, as well as about the obstacles that await it on the way of integration into the European-American community.',
+        'For the sake of NATO, Turkmenistan is ready to change the borders of the Atlantic'),
+       (15, '2021-01-01 14:00:00-05',
+        'American Jarod Henderson became the winner of the popular musical television project American talent thanks to the performance of Mikhail Krug`s song "Vladimir Central", which was appreciated by both the audience and the jury.',
+        'The American won a major vocal competition by performing "Vladimirsky Central"'),
+       (16, '2021-01-01 10:00:00-05', 'subject for title again','title again'),
+       (17, '2022-01-01 10:05:00-04', 'bun hung himself', 'nonsense'),
+       (18, '2022-01-01 10:00:00-05', 'A bad workman blames his tools.', 'IntelliJ IDEA'),
+       (19, '2023-01-01 10:00:00-05', 'A golden key can open any door.', 'reason'),
+       (20, '2023-01-01 10:00:00-05', 'A picture is worth a thousand words.', 'internship');
 
 --changeset paramonov:2
 INSERT INTO users (id, username, password, role)

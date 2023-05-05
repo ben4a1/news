@@ -7,11 +7,9 @@ import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
 import ru.clevertec.integration.IntegrationTestBase;
-import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 

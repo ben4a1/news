@@ -23,7 +23,9 @@ import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static ru.clevertec.util.UtilClass.comment1;
 import static ru.clevertec.util.UtilClass.comment2;
 
@@ -35,7 +37,7 @@ class CommentServiceTest {
     private static final Long USER_ID = 1L;
     private static final String USERNAME = "Max";
     public static final String SUBJECT = "Pugacheva reacted to the death of rabbit";
-    public static final LocalDateTime CREATION_TIME = now();
+    public static final LocalDateTime CREATION_TIME = LocalDateTime.of(2022, 10, 9, 12, 12);
     @Mock
     private CommentRepository commentRepository;
     @Mock
@@ -49,7 +51,7 @@ class CommentServiceTest {
     void checkSave() {
         Comment comment = Comment.builder().id(NEWS_ID).subject(SUBJECT).build();
         CommentCreateUpdateDto commentCreateUpdateDto = new CommentCreateUpdateDto(SUBJECT, USERNAME, NEWS_ID, USER_ID);
-        CommentReadDto expectedReadDto = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);
+        CommentReadDto expectedReadDto = getCommentReadDto(USERNAME);
         doReturn(comment)
                 .when(commentCreateUpdateMapper).map(commentCreateUpdateDto);
         doReturn(comment)
@@ -66,55 +68,45 @@ class CommentServiceTest {
     }
 
     @Test
-    void checkSaveShouldReturnExists() {
-        CommentCreateUpdateDto commentCreateUpdateDto = getCommentCreateUpdateDto("username1");
-        CommentReadDto commentReadDto = getCommentReadDto("username1");
-        doReturn(comment1)
-                .when(commentRepository).save(comment1);
-        doReturn(comment1)
-                .when(commentCreateUpdateMapper).map(commentCreateUpdateDto);
-        doReturn(commentReadDto)
-                .when(commentReadMapper).map(comment1);
-
-        CommentReadDto actualResult = commentService.save(commentCreateUpdateDto);
-
-        assertThat(actualResult).isEqualTo(commentReadDto);
-    }
-
-    @Test
     void checkUpdate() {
-        CommentCreateUpdateDto createUpdateDto = getCommentCreateUpdateDto("alibaba");
+        String username = "alibaba";
+        CommentCreateUpdateDto createUpdateDto = getCommentCreateUpdateDto(username);
+        CommentReadDto commentReadDto = getCommentReadDto(username);
         doReturn(Optional.of(comment1))
                 .when(commentRepository).findById(COMMENT_ID);
         doReturn(comment1)
                 .when(commentCreateUpdateMapper).map(createUpdateDto, comment1);
+        when(commentRepository.saveAndFlush(comment1))
+                .thenReturn(comment1);
+        doReturn(commentReadDto)
+                .when(commentReadMapper).map(comment1);
 
         commentService.update(COMMENT_ID, createUpdateDto);
 
+        verify(commentRepository).findById(COMMENT_ID);
         verify(commentRepository).saveAndFlush(comment1);
+        verify(commentCreateUpdateMapper).map(createUpdateDto, comment1);
+        verify(commentReadMapper).map(Optional.of(comment1).get());
     }
 
     @Test
     void checkFindByIdShouldReturnEquals() {
-        Comment comment = Comment.builder()
-                .id(COMMENT_ID)
-                .creationTime(CREATION_TIME)
-                .subject(SUBJECT)
-                .user(User.builder().username(USERNAME).build()).build();
+        Comment comment = getComment();
         doReturn(Optional.of(comment))
                 .when(commentRepository).findById(COMMENT_ID);
-        doReturn(new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME))
+        doReturn(getCommentReadDto(USERNAME))
                 .when(commentReadMapper).map(comment);
-        CommentReadDto expectedResult = new CommentReadDto(COMMENT_ID, CREATION_TIME, SUBJECT, USERNAME);
+        CommentReadDto expectedResult = getCommentReadDto(USERNAME);
 
         Optional<CommentReadDto> actualResult = commentService.findById(COMMENT_ID);
-        assertThat(actualResult).isPresent();
 
         actualResult.ifPresent(actual -> assertThat(actual).isEqualTo(expectedResult));
+        verify(commentRepository).findById(NEWS_ID);
+        verify(commentReadMapper).map(comment);
     }
 
     @Test
-    void findAll() {
+    void checkFindAll() {
         List<Comment> comments = Arrays.asList(comment1, comment2);
         doReturn(comments)
                 .when(commentRepository).findAll();
@@ -124,17 +116,26 @@ class CommentServiceTest {
         List<CommentReadDto> actualResult = commentService.findAll();
 
         assertThat(actualResult).hasSize(comments.size());
+        verify(commentReadMapper, times(2)).map(any());
+        verify(commentRepository).findAll();
     }
 
     @Test
-    void delete() {
-        Comment comment = comment1;
+    void checkDelete() {
         doReturn(Optional.of(comment1))
                 .when(commentRepository).findById(COMMENT_ID);
 
-        commentService.delete(comment.getId());
+        commentService.delete(comment1.getId());
 
-        verify(commentRepository).delete(comment);
+        verify(commentRepository).delete(comment1);
+    }
+
+    private static Comment getComment() {
+        return Comment.builder()
+                .id(COMMENT_ID)
+                .creationTime(CREATION_TIME)
+                .subject(SUBJECT)
+                .user(User.builder().username(USERNAME).build()).build();
     }
 
     private CommentCreateUpdateDto getCommentCreateUpdateDto(String username) {
@@ -142,6 +143,6 @@ class CommentServiceTest {
     }
 
     private CommentReadDto getCommentReadDto(String username) {
-        return new CommentReadDto(1L, now(), SUBJECT, username);
+        return new CommentReadDto(1L, CREATION_TIME, SUBJECT, username);
     }
 }

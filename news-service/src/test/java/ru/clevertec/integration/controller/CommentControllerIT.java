@@ -1,7 +1,6 @@
 package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;

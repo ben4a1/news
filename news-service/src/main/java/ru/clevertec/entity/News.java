@@ -1,5 +1,7 @@
 package ru.clevertec.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +41,7 @@ public class News implements BaseEntity<Long> {
 
     private String subject;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     @Builder.Default
     private final List<Comment> comments = new ArrayList<>();

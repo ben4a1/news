@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
+import ru.clevertec.predicate.CriteriaPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class FilterNewsRepositoryImpl implements FilterNewsRepository {
 
     private final EntityManager entityManager;
+    private final CriteriaPredicate criteriaPredicate;
 
     @Override
     public List<News> findAll(NewsFilter filter, Pageable pageable) {
@@ -34,7 +36,6 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         criteria.select(news).where(
                 predicates.toArray(Predicate[]::new)
         );
-
         return entityManager.createQuery(criteria)
                 .getResultList();
     }

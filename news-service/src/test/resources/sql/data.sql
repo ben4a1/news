@@ -3,8 +3,8 @@ TRUNCATE comment, news, users;
 INSERT INTO news (id, creation_time, subject, title)
 VALUES (1, '2021-01-01 10:00:00-05', 'subject', 'title'),
        (2, '2021-01-01 10:00:00-05', 'subject', 'title'),
-       (3, '2021-01-01 10:00:00-05', 'subject', 'title'),
-       (4, '2021-01-01 10:00:00-05', 'subject', 'title');
+       (3, '2021-01-01 10:00:00-05', 'Eyjafjallajokull', 'title'),
+       (4, '2021-01-01 10:00:00-05', 'new Jet', 'title');
 SELECT SETVAL('news_id_seq', (SELECT MAX(id) FROM news));
 
 INSERT INTO users (id, username, password, role)

@@ -9,5 +9,5 @@ public record NewsReadDto(Long id,
                           LocalDateTime creationTime,
                           String title,
                           String subject,
-                          List<Comment> comments) {
+                          List<String> comments) {
 }

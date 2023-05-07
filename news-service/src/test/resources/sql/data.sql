@@ -1,4 +1,4 @@
-TRUNCATE news, users, comment;
+TRUNCATE comment, news, users;
 
 INSERT INTO news (id, creation_time, subject, title)
 VALUES (1, '2021-01-01 10:00:00-05', 'subject', 'title'),

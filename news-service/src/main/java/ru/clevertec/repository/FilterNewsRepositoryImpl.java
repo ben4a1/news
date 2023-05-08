@@ -6,7 +6,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
@@ -20,7 +22,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
     private final EntityManager entityManager;
 
     @Override
-    public List<News> findAll(NewsFilter filter, Pageable pageable) {
+    public Page<News> findAll(NewsFilter filter, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<News> criteria = cb.createQuery(News.class);
         Root<News> news = criteria.from(News.class);
@@ -36,7 +38,9 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
                     predicates.toArray(Predicate[]::new)
             );
         }
-        return entityManager.createQuery(criteria)
+        List<News> resultList = entityManager.createQuery(criteria)
                 .getResultList();
+        long size = resultList.size();
+        return PageableExecutionUtils.getPage(resultList, pageable, () -> size);
     }
 }

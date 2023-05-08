@@ -37,8 +37,7 @@ class NewsControllerIT extends IntegrationTestBase {
     void checkFindAllShouldReturnSameSize() {
         int expected = newsRepository.findAll().size();
 
-        //TODO
-        int actual = newsController.findAll(null, Pageable.ofSize(2)).size();
+        int actual = newsController.findAll(null, Pageable.ofSize(2)).content().size();
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -48,7 +47,7 @@ class NewsControllerIT extends IntegrationTestBase {
         int expected = 2;
         NewsFilter filter = new NewsFilter("tit", "sub");
 
-        int actual = newsController.findAll(filter, Pageable.ofSize(2)).size();
+        int actual = newsController.findAll(filter, Pageable.ofSize(2)).content().size();
 
         assertThat(actual).isEqualTo(expected);
     }

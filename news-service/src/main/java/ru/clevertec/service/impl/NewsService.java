@@ -1,6 +1,7 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,10 +65,9 @@ public class NewsService {
                 .toList();
     }
 
-    public List<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+    public Page<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+        newsRepository.findAll(pageable);
         return newsRepository.findAll(filter, pageable)
-                .stream()
-                .map(newsReadMapper::map)
-                .toList();
+                .map(newsReadMapper::map);
     }
 }

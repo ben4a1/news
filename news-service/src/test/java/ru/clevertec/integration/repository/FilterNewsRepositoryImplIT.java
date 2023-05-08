@@ -9,6 +9,9 @@ import ru.clevertec.entity.News;
 import ru.clevertec.integration.IntegrationTestBase;
 import ru.clevertec.repository.impl.FilterNewsRepositoryImpl;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
@@ -18,12 +21,12 @@ class FilterNewsRepositoryImplIT extends IntegrationTestBase {
 
     @Test
     void findAll() {
-        int expected = 2;
+        List<Long> expected = Arrays.asList(1L, 2L);
         NewsFilter filter = new NewsFilter("tit", "sub");
 
-        Page<News> page = repository.findAll(filter, PageRequest.of(1, 2));
-        int actual = page.getSize();
+        Page<News> page = repository.findAll(filter, PageRequest.ofSize(10));
+        List<Long> actual = page.getContent().stream().map(News::getId).toList();
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).containsAll(expected);
     }
 }

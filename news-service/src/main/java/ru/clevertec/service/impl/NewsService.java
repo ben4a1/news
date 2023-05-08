@@ -66,7 +66,6 @@ public class NewsService {
     }
 
     public Page<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
-        newsRepository.findAll(pageable);
         return newsRepository.findAll(filter, pageable)
                 .map(newsReadMapper::map);
     }

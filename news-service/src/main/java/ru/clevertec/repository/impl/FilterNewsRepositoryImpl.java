@@ -1,4 +1,4 @@
-package ru.clevertec.repository;
+package ru.clevertec.repository.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -12,6 +12,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
+import ru.clevertec.repository.FilterNewsRepository;
 
 import java.util.ArrayList;
 import java.util.List;

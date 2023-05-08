@@ -9,5 +9,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
-cache.size: 5
+
+cache:
+  size:5
   algorithm:lru

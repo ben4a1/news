@@ -1,6 +1,8 @@
 package ru.clevertec.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.NewsCreateUpdateDto;
+import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.service.impl.NewsService;
 
@@ -27,8 +30,9 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<NewsReadDto> findAll() {
-        return newsService.findAll();
+    public List<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+//        Page<NewsReadDto> page = newsService.findAll(filter, pageable);
+        return newsService.findAll(filter, pageable);
     }
 
     @GetMapping("/{id}")

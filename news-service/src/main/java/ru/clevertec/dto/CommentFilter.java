@@ -1,8 +1,6 @@
 package ru.clevertec.dto;
 
-import java.time.LocalDateTime;
-
-public record CommentFilter(LocalDateTime creationTime,
+public record CommentFilter(Long newsId,
                             String subject,
                             String username) {
 }

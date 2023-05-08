@@ -1,10 +1,16 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.NewsCreateUpdateDto;
+import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
+import ru.clevertec.entity.News;
 import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
@@ -60,5 +66,13 @@ public class NewsService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public List<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+        if (filter == null) {
+            return this.findAll();
+        }
+        return newsRepository.findAll(filter, pageable)
+                .stream().map(newsReadMapper::map).toList();
     }
 }

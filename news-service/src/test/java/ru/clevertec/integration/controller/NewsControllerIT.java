@@ -2,6 +2,7 @@ package ru.clevertec.integration.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
 import ru.clevertec.controller.NewsController;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
@@ -35,7 +36,8 @@ class NewsControllerIT extends IntegrationTestBase {
     void checkFindAllShouldReturnSameSize() {
         int expected = newsRepository.findAll().size();
 
-        int actual = newsController.findAll().size();
+        //TODO
+        int actual = newsController.findAll(null, Pageable.ofSize(2)).size();
 
         assertThat(actual).isEqualTo(expected);
     }

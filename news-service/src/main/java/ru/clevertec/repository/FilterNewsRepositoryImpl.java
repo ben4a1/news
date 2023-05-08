@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
-import ru.clevertec.predicate.CriteriaPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
 public class FilterNewsRepositoryImpl implements FilterNewsRepository {
 
     private final EntityManager entityManager;
-    private final CriteriaPredicate criteriaPredicate;
 
     @Override
     public List<News> findAll(NewsFilter filter, Pageable pageable) {
@@ -27,15 +25,17 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         CriteriaQuery<News> criteria = cb.createQuery(News.class);
         Root<News> news = criteria.from(News.class);
         List<Predicate> predicates = new ArrayList<>();
-        if (filter.title() != null) {
-            predicates.add(cb.like(news.get(News_.SUBJECT), filter.subject()));
+        if (filter != null) {
+            if (filter.title() != null) {
+                predicates.add(cb.like(news.get(News_.SUBJECT), "%" + filter.subject() + "%"));
+            }
+            if (filter.subject() != null) {
+                predicates.add(cb.like(news.get(News_.TITLE), "%" + filter.title() + "%"));
+            }
+            criteria.select(news).where(
+                    predicates.toArray(Predicate[]::new)
+            );
         }
-        if (filter.subject() != null) {
-            predicates.add(cb.like(news.get(News_.TITLE), filter.title()));
-        }
-        criteria.select(news).where(
-                predicates.toArray(Predicate[]::new)
-        );
         return entityManager.createQuery(criteria)
                 .getResultList();
     }

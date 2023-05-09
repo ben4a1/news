@@ -1,7 +1,6 @@
 package ru.clevertec.cache.impl;
 
 
-import org.springframework.stereotype.Component;
 import ru.clevertec.cache.Cache;
 
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.Map;
  * @param <K> – the type of keys maintained by this cache
  * @param <V> – the type of cached values
  */
-@Component
 public class LFUCache<K, V> implements Cache<K, V> {
     private final int cacheSize;
     private final Map<K, Node<K, V>> cacheData;

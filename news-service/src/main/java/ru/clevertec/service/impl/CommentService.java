@@ -2,6 +2,7 @@ package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
+import ru.clevertec.entity.News;
 import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
@@ -21,13 +23,22 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
     private final CommentCreateUpdateMapper commentCreateUpdateMapper;
+//    @Qualifier("${cache.algorithm}CacheCommentFactory")
+    private final CacheFactory<Long, Comment> cacheFactory;
     private final Cache<Long, Comment> cache;
+
+    public CommentService(CommentRepository commentRepository, CommentReadMapper commentReadMapper, CommentCreateUpdateMapper commentCreateUpdateMapper, CacheFactory<Long, Comment> cacheFactory) {
+        this.commentRepository = commentRepository;
+        this.commentReadMapper = commentReadMapper;
+        this.commentCreateUpdateMapper = commentCreateUpdateMapper;
+        this.cacheFactory = cacheFactory;
+        this.cache = this.cacheFactory.createCache();
+    }
 
     @Transactional
     public CommentReadDto save(CommentCreateUpdateDto comment) {

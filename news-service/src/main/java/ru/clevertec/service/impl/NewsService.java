@@ -1,6 +1,7 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
+import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
@@ -19,13 +21,22 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class NewsService {
 
     private final NewsRepository newsRepository;
     private final NewsReadMapper newsReadMapper;
     private final NewsCreateUpdateMapper newsCreateUpdateMapper;
+//    @Qualifier("${cache.algorithm}CacheNewsFactory")
+    private final CacheFactory<Long, News> cacheFactory;
     private final Cache<Long, News> cache;
+
+    public NewsService(NewsRepository newsRepository, NewsReadMapper newsReadMapper, NewsCreateUpdateMapper newsCreateUpdateMapper, CacheFactory<Long, News> cacheFactory) {
+        this.newsRepository = newsRepository;
+        this.newsReadMapper = newsReadMapper;
+        this.newsCreateUpdateMapper = newsCreateUpdateMapper;
+        this.cacheFactory = cacheFactory;
+        this.cache = this.cacheFactory.createCache();
+    }
 
     @Transactional
     public NewsReadDto save(NewsCreateUpdateDto news) {

@@ -24,7 +24,7 @@ class FilterNewsRepositoryImplIT extends IntegrationTestBase {
         List<Long> expected = Arrays.asList(1L, 2L);
         NewsFilter filter = new NewsFilter("tit", "sub");
 
-        Page<News> page = repository.findAll(filter, PageRequest.ofSize(10));
+        Page<News> page = repository.findAll(filter, PageRequest.of(1, 10));
         List<Long> actual = page.getContent().stream().map(News::getId).toList();
 
         assertThat(actual).containsAll(expected);

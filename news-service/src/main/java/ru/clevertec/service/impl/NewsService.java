@@ -32,8 +32,7 @@ public class NewsService {
         News newsToSave = newsCreateUpdateMapper.map(news);
         News savedNews = newsRepository.save(newsToSave);
         cache.put(savedNews.getId(), savedNews);
-        NewsReadDto newsReadDto = newsReadMapper.map(savedNews);
-        return newsReadDto;
+        return newsReadMapper.map(savedNews);
     }
 
     @Transactional
@@ -43,6 +42,7 @@ public class NewsService {
             News mappedNews = newsCreateUpdateMapper.map(news, newsToUpdate.get());
             News updatedNews = newsRepository.saveAndFlush(mappedNews);
             NewsReadDto newsReadDto = newsReadMapper.map(updatedNews);
+            cache.put(id, updatedNews);
             return Optional.of(newsReadDto);
         } else {
             return Optional.empty();
@@ -50,7 +50,6 @@ public class NewsService {
     }
 
     public Optional<NewsReadDto> findById(Long id) {
-        NewsReadDto readDto;
         News news;
         if (cache.contains(id)) {
             news = cache.get(id);
@@ -59,8 +58,8 @@ public class NewsService {
             news = newsOptional.orElse(null);
             cache.put(news.getId(), news);
         }
-        readDto = newsReadMapper.map(news);
-        return Optional.of(readDto);
+        NewsReadDto newsReadDto = newsReadMapper.map(news);
+        return Optional.of(newsReadDto);
     }
 
     @Transactional

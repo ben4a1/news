@@ -13,6 +13,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.Comment_;
+import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
 import ru.clevertec.entity.User_;
 import ru.clevertec.repository.FilterCommentRepository;
@@ -45,10 +46,10 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
                 predicates.toArray(Predicate[]::new)
         );
         List<Comment> resultList = entityManager.createQuery(criteria)
-                .setFirstResult((int) pageable.getOffset())
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteriaT.from(Comment.class)))).getSingleResult();
+        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteria.from(Comment.class)))).getSingleResult();
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 }

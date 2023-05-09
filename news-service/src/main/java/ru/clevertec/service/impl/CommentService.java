@@ -1,6 +1,7 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
-import ru.clevertec.entity.News;
+import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;

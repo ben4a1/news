@@ -40,10 +40,10 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
                 predicates.toArray(Predicate[]::new)
         );
         List<News> resultList = entityManager.createQuery(criteria)
-                .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber() - 1))
+                .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteriaT.from(News.class)))).getSingleResult();
+        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteria.from(News.class)))).getSingleResult();
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 }

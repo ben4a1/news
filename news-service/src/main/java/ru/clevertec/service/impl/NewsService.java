@@ -1,7 +1,6 @@
 package ru.clevertec.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,13 +28,15 @@ public class NewsService {
 //    @Qualifier("${cache.algorithm}CacheNewsFactory")
     private final CacheFactory<Long, News> cacheFactory;
     private final Cache<Long, News> cache;
+    private final EntityManager entityManager;
 
-    public NewsService(NewsRepository newsRepository, NewsReadMapper newsReadMapper, NewsCreateUpdateMapper newsCreateUpdateMapper, CacheFactory<Long, News> cacheFactory) {
+    public NewsService(NewsRepository newsRepository, NewsReadMapper newsReadMapper, NewsCreateUpdateMapper newsCreateUpdateMapper, CacheFactory<Long, News> cacheFactory, EntityManager entityManager) {
         this.newsRepository = newsRepository;
         this.newsReadMapper = newsReadMapper;
         this.newsCreateUpdateMapper = newsCreateUpdateMapper;
         this.cacheFactory = cacheFactory;
         this.cache = this.cacheFactory.createCache();
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -64,13 +65,16 @@ public class NewsService {
         News news;
         if (cache.contains(id)) {
             news = cache.get(id);
+            entityManager.refresh(news);
         } else {
             Optional<News> newsOptional = newsRepository.findById(id);
             news = newsOptional.orElse(null);
-            cache.put(news.getId(), news);
+            if (news != null) {
+                cache.put(news.getId(), news);
+            }
         }
-        NewsReadDto newsReadDto = newsReadMapper.map(news);
-        return Optional.of(newsReadDto);
+        return news == null ? Optional.empty()
+                : Optional.of(newsReadMapper.map(news));
     }
 
     @Transactional

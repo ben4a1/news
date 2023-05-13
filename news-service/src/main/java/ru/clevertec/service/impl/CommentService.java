@@ -1,5 +1,6 @@
 package ru.clevertec.service.impl;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,13 +32,15 @@ public class CommentService {
     //    @Qualifier("${cache.algorithm}CacheCommentFactory")
     private final CacheFactory<Long, Comment> cacheFactory;
     private final Cache<Long, Comment> cache;
+    private final EntityManager entityManager;
 
-    public CommentService(CommentRepository commentRepository, CommentReadMapper commentReadMapper, CommentCreateUpdateMapper commentCreateUpdateMapper, CacheFactory<Long, Comment> cacheFactory) {
+    public CommentService(CommentRepository commentRepository, CommentReadMapper commentReadMapper, CommentCreateUpdateMapper commentCreateUpdateMapper, CacheFactory<Long, Comment> cacheFactory, EntityManager entityManager) {
         this.commentRepository = commentRepository;
         this.commentReadMapper = commentReadMapper;
         this.commentCreateUpdateMapper = commentCreateUpdateMapper;
         this.cacheFactory = cacheFactory;
         this.cache = this.cacheFactory.createCache();
+        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -66,9 +69,13 @@ public class CommentService {
         Comment comment;
         if (cache.contains(id)) {
             comment = cache.get(id);
+            entityManager.refresh(comment);
         } else {
             Optional<Comment> commentOptional = commentRepository.findById(id);
             comment = commentOptional.orElse(null);
+            if (comment != null){
+                cache.put(comment.getId(), comment);
+            }
         }
         return comment == null ? Optional.empty()
                 : Optional.of(commentReadMapper.map(comment));

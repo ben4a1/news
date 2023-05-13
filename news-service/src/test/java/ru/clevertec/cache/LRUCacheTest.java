@@ -4,9 +4,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.clevertec.cache.impl.LRUCache;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LRUCacheTest {
+
     private static Cache<String, Integer> lruCache;
 
     @BeforeAll
@@ -31,8 +34,12 @@ class LRUCacheTest {
     }
 
     @Test
-    void checkGetAllShouldReturnEquals() {
+    void checkGetAllShouldReturnSameSize() {
+        Map<String, Integer> before = lruCache.getAll();
+
         lruCache.put("eleven", 11);
-        assertThat(lruCache.getAll().size()).isEqualTo(4);
+        Map<String, Integer> after = lruCache.getAll();
+
+        assertThat(after).isEqualTo(before);
     }
 }

@@ -29,8 +29,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final CommentReadMapper commentReadMapper;
     private final CommentCreateUpdateMapper commentCreateUpdateMapper;
-    //    @Qualifier("${cache.algorithm}CacheCommentFactory")
-    private final CacheFactory<Long, Comment> cacheFactory;
     private final Cache<Long, Comment> cache;
     private final EntityManager entityManager;
 
@@ -38,8 +36,7 @@ public class CommentService {
         this.commentRepository = commentRepository;
         this.commentReadMapper = commentReadMapper;
         this.commentCreateUpdateMapper = commentCreateUpdateMapper;
-        this.cacheFactory = cacheFactory;
-        this.cache = this.cacheFactory.createCache();
+        this.cache = cacheFactory.createCache();
         this.entityManager = entityManager;
     }
 
@@ -73,12 +70,12 @@ public class CommentService {
         } else {
             Optional<Comment> commentOptional = commentRepository.findById(id);
             comment = commentOptional.orElse(null);
-            if (comment != null){
+            if (comment != null) {
                 cache.put(comment.getId(), comment);
             }
         }
-        return comment == null ? Optional.empty()
-                : Optional.of(commentReadMapper.map(comment));
+        return Optional.ofNullable(comment)
+                .map(commentReadMapper::map);
     }
 
     public List<CommentReadDto> findAll() {

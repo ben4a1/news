@@ -13,8 +13,8 @@ import java.util.Map;
  * @param <V> – the type of cached values
  */
 public class LRUCache<K, V> implements Cache<K, V> {
-    int cacheSize;
-    Map<K, V> cacheData;
+    private final int cacheSize;
+    private final Map<K, V> cacheData;
 
     /**
      * Initializing the cache with a given size.

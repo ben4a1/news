@@ -9,31 +9,30 @@ import ru.clevertec.entity.News;
 import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.factory.impl.CacheFactoryLFUImpl;
 import ru.clevertec.factory.impl.CacheFactoryLRUImpl;
+import ru.clevertec.model.CacheAlgorithm;
 
 @Configuration
 public class CacheFactoryConfig {
 
     private final int cacheSize;
-    private final String cacheAlgorithm;
+    private final CacheAlgorithm cacheAlgorithm;
 
     public CacheFactoryConfig(@Value("${cache.size}") int cacheSize,
-                              @Value("${cache.algorithm}") String cacheAlgorithm) {
+                              @Value("${cache.algorithm}") CacheAlgorithm cacheAlgorithm) {
         this.cacheSize = cacheSize;
         this.cacheAlgorithm = cacheAlgorithm;
     }
 
     @Bean(name = "cacheCommentFactory")
-    @ConditionalOnProperty(prefix = "cache", name = "algorithm", havingValue = "lru")
     public CacheFactory<Long, Comment> cacheFactoryComment() {
-        return "lru".equalsIgnoreCase(cacheAlgorithm)
+        return "lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())
                 ? new CacheFactoryLRUImpl<>(cacheSize)
                 : new CacheFactoryLFUImpl<>(cacheSize);
     }
 
     @Bean(name = "cacheNewsFactory")
-    @ConditionalOnProperty(prefix = "cache", name = "algorithm", havingValue = "lru")
     public CacheFactory<Long, News> cacheFactoryNews() {
-        return "lru".equalsIgnoreCase(cacheAlgorithm)
+        return "lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())
                 ? new CacheFactoryLRUImpl<>(cacheSize)
                 : new CacheFactoryLFUImpl<>(cacheSize);
     }

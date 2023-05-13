@@ -2,16 +2,16 @@ package ru.clevertec.cache;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import ru.clevertec.cache.impl.LFUCache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class LFUCacheTest {
-    private Cache<String, Integer> lfuCache;
+
+    private static Cache<String, Integer> lfuCache;
+
     @BeforeAll
-    void prepare(){
+    static void prepare() {
         lfuCache = new LFUCache<>(4);
         lfuCache.put("one", 1);
         lfuCache.put("two", 2);
@@ -25,6 +25,7 @@ class LFUCacheTest {
     void checkGetShouldReturn1() {
         assertThat(lfuCache.get("one")).isEqualTo(1);
     }
+
     @Test
     void checkGetShouldReturnNull() {
         assertThat(lfuCache.get("two")).isNull();
@@ -34,8 +35,12 @@ class LFUCacheTest {
      * Check that adding a new element does not increase the allowed cache size
      */
     @Test
-    void checkGetAllShouldReturnEquals() {
+    void checkGetAllShouldReturnSameSize() {
+        int sizeBefore = lfuCache.getAll().size();
+
         lfuCache.put("eleven", 11);
-        assertThat(lfuCache.getAll().size()).isEqualTo(4);
+        int sizeAfter = lfuCache.getAll().size();
+
+        assertThat(sizeAfter).isEqualTo(sizeBefore);
     }
 }

@@ -26,7 +26,6 @@ public class NewsService {
     private final NewsReadMapper newsReadMapper;
     private final NewsCreateUpdateMapper newsCreateUpdateMapper;
 //    @Qualifier("${cache.algorithm}CacheNewsFactory")
-    private final CacheFactory<Long, News> cacheFactory;
     private final Cache<Long, News> cache;
     private final EntityManager entityManager;
 
@@ -34,8 +33,7 @@ public class NewsService {
         this.newsRepository = newsRepository;
         this.newsReadMapper = newsReadMapper;
         this.newsCreateUpdateMapper = newsCreateUpdateMapper;
-        this.cacheFactory = cacheFactory;
-        this.cache = this.cacheFactory.createCache();
+        this.cache = cacheFactory.createCache();
         this.entityManager = entityManager;
     }
 

@@ -1,9 +1,12 @@
 package ru.clevertec.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.dto.CommentCreateUpdateDto;
+import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
@@ -60,5 +63,10 @@ public class CommentService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public Page<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
+        return commentRepository.findAll(filter, pageable)
+                .map(commentReadMapper::map);
     }
 }

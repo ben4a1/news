@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.clevertec.entity.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long>,
+        FilterCommentRepository {
 }

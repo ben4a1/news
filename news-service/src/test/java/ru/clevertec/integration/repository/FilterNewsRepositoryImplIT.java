@@ -2,22 +2,31 @@ package ru.clevertec.integration.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.integration.IntegrationTestBase;
-import ru.clevertec.predicate.CriteriaPredicate;
-import ru.clevertec.repository.FilterNewsRepositoryImpl;
+import ru.clevertec.repository.impl.FilterNewsRepositoryImpl;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
 class FilterNewsRepositoryImplIT extends IntegrationTestBase {
 
     private final FilterNewsRepositoryImpl repository;
-        @Test
+
+    @Test
     void findAll() {
-        NewsFilter filter = new NewsFilter("%tit%", "%sub%");
-        List<News> news = repository.findAll(filter, null);
-        System.out.println(news);
+        List<Long> expected = Arrays.asList(1L, 2L);
+        NewsFilter filter = new NewsFilter("tit", "sub");
+
+        Page<News> page = repository.findAll(filter, PageRequest.ofSize(10));
+        List<Long> actual = page.getContent().stream().map(News::getId).toList();
+
+        assertThat(actual).containsAll(expected);
     }
 }

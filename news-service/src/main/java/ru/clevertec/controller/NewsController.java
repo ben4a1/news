@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
+import ru.clevertec.dto.PageResponse;
 import ru.clevertec.service.impl.NewsService;
 
 import java.util.List;
@@ -30,9 +32,9 @@ public class NewsController {
     private final NewsService newsService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
-//        Page<NewsReadDto> page = newsService.findAll(filter, pageable);
-        return newsService.findAll(filter, pageable);
+    public PageResponse<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+        Page<NewsReadDto> page = newsService.findAll(filter, pageable);
+        return PageResponse.of(page);
     }
 
     @GetMapping("/{id}")

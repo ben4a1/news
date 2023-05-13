@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import ru.clevertec.controller.NewsController;
 import ru.clevertec.dto.NewsCreateUpdateDto;
+import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
 import ru.clevertec.integration.IntegrationTestBase;
@@ -36,8 +37,17 @@ class NewsControllerIT extends IntegrationTestBase {
     void checkFindAllShouldReturnSameSize() {
         int expected = newsRepository.findAll().size();
 
-        //TODO
-        int actual = newsController.findAll(null, Pageable.ofSize(2)).size();
+        int actual = newsController.findAll(null, Pageable.ofSize(2)).content().size();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void checkFindAllShouldReturnSize2() {
+        int expected = 2;
+        NewsFilter filter = new NewsFilter("tit", "sub");
+
+        int actual = newsController.findAll(filter, Pageable.ofSize(2)).content().size();
 
         assertThat(actual).isEqualTo(expected);
     }

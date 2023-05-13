@@ -27,7 +27,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
     public Page<News> findAll(@NonNull NewsFilter filter, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<News> criteria = cb.createQuery(News.class);
-        CriteriaQuery<Long> criteriaT = cb.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<News> news = criteria.from(News.class);
         List<Predicate> predicates = new ArrayList<>();
         if (filter.title() != null) {
@@ -39,11 +39,14 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         criteria.select(news).where(
                 predicates.toArray(Predicate[]::new)
         );
+        countQuery.select(cb.count(news)).where(
+                predicates.toArray(Predicate[]::new)
+        );
         List<News> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteria.from(News.class)))).getSingleResult();
+        Long total = entityManager.createQuery(countQuery).getSingleResult();
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 }

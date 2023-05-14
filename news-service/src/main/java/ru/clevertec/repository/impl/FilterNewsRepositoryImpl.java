@@ -35,7 +35,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        long total = getNewsCount(criteriaBuilder,filter);
+        long total = getNewsCount(criteriaBuilder, filter);
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 

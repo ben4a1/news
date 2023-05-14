@@ -13,7 +13,6 @@ import org.springframework.data.support.PageableExecutionUtils;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.Comment_;
-import ru.clevertec.entity.News;
 import ru.clevertec.entity.News_;
 import ru.clevertec.entity.User_;
 import ru.clevertec.repository.FilterCommentRepository;
@@ -41,7 +40,7 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        Long total = entityManager.createQuery(countQuery).getSingleResult();
+        long total = getCommentCount(cb, filter);
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 
@@ -57,5 +56,13 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
             predicates.add(cb.equal(comment.get(Comment_.news).get(News_.ID), filter.newsId()));
         }
         return predicates.toArray(Predicate[]::new);
+    }
+    private long getCommentCount(CriteriaBuilder criteriaBuilder, CommentFilter filter){
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Comment> countRoot = countQuery.from(Comment.class);
+        Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, countRoot);
+        countQuery.select(criteriaBuilder.count(countRoot))
+                .where(predicates);
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

@@ -1,14 +1,17 @@
 package ru.clevertec.service;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
+import ru.clevertec.cache.Cache;
+import ru.clevertec.cache.impl.LRUCache;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
+import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
@@ -20,6 +23,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,11 +42,18 @@ class NewsServiceTest {
     private NewsReadMapper newsReadMapper;
     @Mock
     private NewsCreateUpdateMapper newsCreateUpdateMapper;
+    @Mock
+    private Cache<Long, News> cache;
+    @Mock
+    private CacheFactory<Long, News> cacheFactory;
+    @Mock
+    private EntityManager entityManager;
     @InjectMocks
     private NewsService newsService;
 
     @Test
     void checkSave() {
+        LRUCache<Long, News> lruCache = new LRUCache<>(5);
         News news = getNews();
         NewsCreateUpdateDto newsCreateUpdateDto = getCreateUpdateDto();
         NewsReadDto expectedReadDto = getReadDto();
@@ -52,6 +63,10 @@ class NewsServiceTest {
                 .when(newsCreateUpdateMapper).map(newsCreateUpdateDto);
         doReturn(expectedReadDto)
                 .when(newsReadMapper).map(news);
+        doReturn(lruCache)
+                .when(cacheFactory).createCache();
+        doNothing()
+                .when(cache).put(news.getId(), news);
 
         NewsReadDto actualReadDto = newsService.save(newsCreateUpdateDto);
 
@@ -74,6 +89,8 @@ class NewsServiceTest {
                 .when(newsRepository).saveAndFlush(news);
         doReturn(readDto)
                 .when(newsReadMapper).map(news);
+        doNothing()
+                .when(cache).put(news.getId(), news);
 
         newsService.update(NEWS_ID, createUpdateDto);
 
@@ -90,6 +107,10 @@ class NewsServiceTest {
                 .when(newsRepository).findById(NEWS_ID);
         doReturn(getReadDto())
                 .when(newsReadMapper).map(news);
+        doReturn(false)
+                .when(cache.contains(news.getId()));
+        doNothing()
+                .when(cache).put(news.getId(), news);
         NewsReadDto expectedResult = getReadDto();
 
         Optional<NewsReadDto> actual = newsService.findById(NEWS_ID);
@@ -122,6 +143,8 @@ class NewsServiceTest {
         News news = getNews();
         doReturn(Optional.of(news))
                 .when(newsRepository).findById(newsId);
+        doNothing()
+                .when(cache).remove(newsId);
 
         newsService.delete(newsId);
 

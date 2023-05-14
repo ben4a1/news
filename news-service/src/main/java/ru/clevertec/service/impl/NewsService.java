@@ -25,7 +25,6 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsReadMapper newsReadMapper;
     private final NewsCreateUpdateMapper newsCreateUpdateMapper;
-//    @Qualifier("${cache.algorithm}CacheNewsFactory")
     private final Cache<Long, News> cache;
     private final EntityManager entityManager;
 

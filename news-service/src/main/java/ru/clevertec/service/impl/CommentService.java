@@ -1,12 +1,8 @@
 package ru.clevertec.service.impl;
 
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.cache.Cache;
@@ -14,7 +10,6 @@ import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
-import ru.clevertec.entity.News;
 import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;

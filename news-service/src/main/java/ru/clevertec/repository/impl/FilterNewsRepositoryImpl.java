@@ -1,10 +1,8 @@
 package ru.clevertec.repository.impl;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
@@ -27,30 +25,37 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
 
     @Override
     public Page<News> findAll(@NonNull NewsFilter filter, Pageable pageable) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<News> criteria = cb.createQuery(News.class);
-        CriteriaQuery<Long> countCriteria = cb.createQuery(Long.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<News> criteria = criteriaBuilder.createQuery(News.class);
         Root<News> root = criteria.from(News.class);
-        List<Predicate> predicates = new ArrayList<>();
-        if (filter.title() != null) {
-            predicates.add(cb.like(root.get(News_.TITLE), "%" + filter.subject() + "%"));
-        }
-        if (filter.subject() != null) {
-            predicates.add(cb.like(root.get(News_.SUBJECT), "%" + filter.title() + "%"));
-        }
-        criteria.select(root).where(
-                predicates.toArray(Predicate[]::new)
-        );
-        countCriteria.where(
-                predicates.toArray(Predicate[]::new)
-        );
-        countCriteria.select(cb.count(root));
+        Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, root);
+        criteria.select(root)
+                        .where(predicates);
         List<News> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        TypedQuery<Long> countQuery = entityManager.createQuery(countCriteria);
-        Long total = countQuery.getSingleResult();
+        long total = getNewsCount(criteriaBuilder, filter);
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
+    }
+
+    private Predicate[] getPredicateArray(NewsFilter filter, CriteriaBuilder cb, Root<News> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        if (filter.title() != null) {
+            predicates.add(cb.like(root.get(News_.TITLE), "%" + filter.title() + "%"));
+        }
+        if (filter.subject() != null) {
+            predicates.add(cb.like(root.get(News_.SUBJECT), "%" + filter.subject() + "%"));
+        }
+        return predicates.toArray(Predicate[]::new);
+    }
+
+    private long getNewsCount(CriteriaBuilder criteriaBuilder, NewsFilter filter){
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<News> countRoot = countQuery.from(News.class);
+        Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, countRoot);
+        countQuery.select(criteriaBuilder.count(countRoot))
+                .where(predicates);
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

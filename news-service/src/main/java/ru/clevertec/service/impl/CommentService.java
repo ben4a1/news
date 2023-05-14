@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.clevertec.cache.Cache;
@@ -78,13 +79,6 @@ public class CommentService {
                 .map(commentReadMapper::map);
     }
 
-    public List<CommentReadDto> findAll() {
-        return commentRepository.findAll()
-                .stream()
-                .map(commentReadMapper::map)
-                .toList();
-    }
-
     @Transactional
     public boolean delete(Long id) {
         return commentRepository.findById(id)
@@ -96,7 +90,18 @@ public class CommentService {
                 .orElse(false);
     }
 
+    public List<CommentReadDto> findAll() {
+        return commentRepository.findAll()
+                .stream()
+                .map(commentReadMapper::map)
+                .toList();
+    }
+
     public Page<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
+        if (filter == null){
+            return commentRepository.findAll(pageable)
+                    .map(commentReadMapper::map);
+        }
         return commentRepository.findAll(filter, pageable)
                 .map(commentReadMapper::map);
     }

@@ -38,10 +38,11 @@ class CommentControllerIT extends IntegrationTestBase {
      */
     @Test
     void checkFindAllShouldReturnSameSize() {
-        int expected = commentRepository.findAll().size();
-        CommentFilter filter = new CommentFilter(1L, "as", "name");
+        Optional<News> oNews = newsRepository.findById(1L);
+        int expected = oNews.get().getComments().size();
+        CommentFilter filter = new CommentFilter(1L, "ec", "name");
 
-        int actual = commentController.findAll(filter, PageRequest.of(1, 50)).size();
+        int actual = commentController.findAll(filter, PageRequest.of(0, 50)).content().size();
 
         assertThat(actual).isEqualTo(expected);
     }

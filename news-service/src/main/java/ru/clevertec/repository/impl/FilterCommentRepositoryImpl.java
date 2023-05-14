@@ -50,14 +50,15 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
             predicates.add(cb.like(comment.get(Comment_.SUBJECT), "%" + filter.subject() + "%"));
         }
         if (filter.username() != null) {
-            predicates.add(cb.equal(comment.get(Comment_.user).get(User_.USERNAME), filter.username()));
+            predicates.add(cb.like(comment.get(Comment_.user).get(User_.USERNAME), "%" + filter.username() + "%"));
         }
         if (filter.newsId() != null) {
             predicates.add(cb.equal(comment.get(Comment_.news).get(News_.ID), filter.newsId()));
         }
         return predicates.toArray(Predicate[]::new);
     }
-    private long getCommentCount(CriteriaBuilder criteriaBuilder, CommentFilter filter){
+
+    private long getCommentCount(CriteriaBuilder criteriaBuilder, CommentFilter filter) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<Comment> countRoot = countQuery.from(Comment.class);
         Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, countRoot);

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 import ru.clevertec.controller.CommentController;
 import ru.clevertec.dto.CommentCreateUpdateDto;
-import ru.clevertec.dto.PageResponse;
+import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.News;
 import ru.clevertec.entity.User;
@@ -39,8 +39,9 @@ class CommentControllerIT extends IntegrationTestBase {
     @Test
     void checkFindAllShouldReturnSameSize() {
         int expected = commentRepository.findAll().size();
+        CommentFilter filter = new CommentFilter(1L, "as", "name");
 
-        int actual = commentController.findAll(null, PageRequest.of(1, 50)).size();
+        int actual = commentController.findAll(filter, PageRequest.of(1, 50)).size();
 
         assertThat(actual).isEqualTo(expected);
     }

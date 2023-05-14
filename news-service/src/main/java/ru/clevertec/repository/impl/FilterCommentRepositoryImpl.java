@@ -29,8 +29,22 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
     public Page<Comment> findAll(@NonNull CommentFilter filter, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Comment> criteria = cb.createQuery(Comment.class);
-        CriteriaQuery<Long> criteriaT = cb.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Comment> comment = criteria.from(Comment.class);
+        Predicate[] predicates = getPredicateArray(filter, cb, comment);
+        criteria.select(comment)
+                .where(predicates);
+        countQuery.select(cb.count(comment))
+                .where(predicates);
+        List<Comment> resultList = entityManager.createQuery(criteria)
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+        long total = getCommentCount(cb, filter);
+        return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
+    }
+
+    private Predicate[] getPredicateArray(CommentFilter filter, CriteriaBuilder cb, Root<Comment> comment) {
         List<Predicate> predicates = new ArrayList<>();
         if (filter.subject() != null) {
             predicates.add(cb.like(comment.get(Comment_.SUBJECT), "%" + filter.subject() + "%"));
@@ -41,14 +55,14 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
         if (filter.newsId() != null) {
             predicates.add(cb.equal(comment.get(Comment_.news).get(News_.ID), filter.newsId()));
         }
-        criteria.select(comment).where(
-                predicates.toArray(Predicate[]::new)
-        );
-        List<Comment> resultList = entityManager.createQuery(criteria)
-                .setFirstResult((int) pageable.getOffset())
-                .setMaxResults(pageable.getPageSize())
-                .getResultList();
-        Long total = entityManager.createQuery(criteriaT.select(cb.count(criteriaT.from(Comment.class)))).getSingleResult();
-        return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
+        return predicates.toArray(Predicate[]::new);
+    }
+    private long getCommentCount(CriteriaBuilder criteriaBuilder, CommentFilter filter){
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<Comment> countRoot = countQuery.from(Comment.class);
+        Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, countRoot);
+        countQuery.select(criteriaBuilder.count(countRoot))
+                .where(predicates);
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 }

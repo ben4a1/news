@@ -33,13 +33,10 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
         Root<Comment> comment = criteria.from(Comment.class);
         Predicate[] predicates = getPredicateArray(filter, cb, comment);
-        criteria.select(comment).where(
-                predicates
-        );
-        countQuery.select(cb.count(comment)).where(
-                predicates
-        );
-
+        criteria.select(comment)
+                .where(predicates);
+        countQuery.select(cb.count(comment))
+                .where(predicates);
         List<Comment> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
@@ -48,7 +45,7 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 
-    private Predicate[] getPredicateArray(CommentFilter filter, CriteriaBuilder cb, Root<Comment> comment){
+    private Predicate[] getPredicateArray(CommentFilter filter, CriteriaBuilder cb, Root<Comment> comment) {
         List<Predicate> predicates = new ArrayList<>();
         if (filter.subject() != null) {
             predicates.add(cb.like(comment.get(Comment_.SUBJECT), "%" + filter.subject() + "%"));

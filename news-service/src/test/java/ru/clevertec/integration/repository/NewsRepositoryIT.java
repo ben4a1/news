@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.entity.News;
 import ru.clevertec.integration.IntegrationTestBase;
-import ru.clevertec.repository.impl.FilterNewsRepositoryImpl;
+import ru.clevertec.repository.NewsRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,16 +15,16 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-class FilterNewsRepositoryImplIT extends IntegrationTestBase {
+class NewsRepositoryIT extends IntegrationTestBase {
 
-    private final FilterNewsRepositoryImpl repository;
+    private final NewsRepository repository;
 
     @Test
     void findAll() {
         List<Long> expected = Arrays.asList(1L, 2L);
         NewsFilter filter = new NewsFilter("tit", "sub");
 
-        Page<News> page = repository.findAll(filter, PageRequest.of(1, 10));
+        Page<News> page = repository.findAll(filter, PageRequest.of(0, 10));
         List<Long> actual = page.getContent().stream().map(News::getId).toList();
 
         assertThat(actual).containsAll(expected);

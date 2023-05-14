@@ -1,7 +1,7 @@
 package ru.clevertec.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.clevertec.entity.Comment;
@@ -9,7 +9,6 @@ import ru.clevertec.entity.News;
 import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.factory.impl.CacheFactoryLFUImpl;
 import ru.clevertec.factory.impl.CacheFactoryLRUImpl;
-import ru.clevertec.model.CacheAlgorithm;
 
 @Configuration
 public class CacheFactoryConfig {
@@ -25,15 +24,34 @@ public class CacheFactoryConfig {
 
     @Bean(name = "cacheCommentFactory")
     public CacheFactory<Long, Comment> cacheFactoryComment() {
-        return "lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())
-                ? new CacheFactoryLRUImpl<>(cacheSize)
-                : new CacheFactoryLFUImpl<>(cacheSize);
+        if ("lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
+            return new CacheFactoryLRUImpl<>(cacheSize);
+        } else if ("lfu".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
+            return new CacheFactoryLFUImpl<>(cacheSize);
+        }
+        return null;
     }
 
     @Bean(name = "cacheNewsFactory")
     public CacheFactory<Long, News> cacheFactoryNews() {
-        return "lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())
-                ? new CacheFactoryLRUImpl<>(cacheSize)
-                : new CacheFactoryLFUImpl<>(cacheSize);
+        if ("lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
+            return new CacheFactoryLRUImpl<>(cacheSize);
+        } else if ("lfu".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
+            new CacheFactoryLFUImpl<>(cacheSize);
+        }
+        return null;
+    }
+
+    private enum CacheAlgorithm {
+
+        LRU("lru"),
+        LFU("lfu");
+
+        @Getter
+        private final String algorithm;
+
+        CacheAlgorithm(String algorithm) {
+            this.algorithm = algorithm;
+        }
     }
 }

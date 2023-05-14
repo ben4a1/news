@@ -1,8 +1,10 @@
 package ru.clevertec.repository.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.NonNull;
@@ -27,26 +29,28 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
     public Page<News> findAll(@NonNull NewsFilter filter, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<News> criteria = cb.createQuery(News.class);
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<News> news = criteria.from(News.class);
+        CriteriaQuery<Long> countCriteria = cb.createQuery(Long.class);
+        Root<News> root = criteria.from(News.class);
         List<Predicate> predicates = new ArrayList<>();
         if (filter.title() != null) {
-            predicates.add(cb.like(news.get(News_.TITLE), "%" + filter.subject() + "%"));
+            predicates.add(cb.like(root.get(News_.TITLE), "%" + filter.subject() + "%"));
         }
         if (filter.subject() != null) {
-            predicates.add(cb.like(news.get(News_.SUBJECT), "%" + filter.title() + "%"));
+            predicates.add(cb.like(root.get(News_.SUBJECT), "%" + filter.title() + "%"));
         }
-        criteria.select(news).where(
+        criteria.select(root).where(
                 predicates.toArray(Predicate[]::new)
         );
-        countQuery.select(cb.count(news)).where(
+        countCriteria.where(
                 predicates.toArray(Predicate[]::new)
         );
+        countCriteria.select(cb.count(root));
         List<News> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
-        Long total = entityManager.createQuery(countQuery).getSingleResult();
+        TypedQuery<Long> countQuery = entityManager.createQuery(countCriteria);
+        Long total = countQuery.getSingleResult();
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 }

@@ -62,7 +62,7 @@ public class NewsService {
         News news;
         if (cache.contains(id)) {
             news = cache.get(id);
-            entityManager.refresh(news);
+            entityManager.merge(news);
         } else {
             Optional<News> newsOptional = newsRepository.findById(id);
             news = newsOptional.orElse(null);

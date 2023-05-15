@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import ru.clevertec.aop.RestLog;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
@@ -31,28 +31,32 @@ public class NewsController {
 
     private final NewsService newsService;
 
+    @RestLog(uri = "/api/v1/news")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PageResponse<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
         Page<NewsReadDto> page = newsService.findAll(filter, pageable);
         return PageResponse.of(page);
     }
-
+    @RestLog(uri = "/api/v1/news/{id}")
     @GetMapping("/{id}")
     public NewsReadDto findById(@PathVariable("id") Long id) {
         return newsService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @RestLog(uri = "/api/v1/news")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public NewsReadDto create(@RequestBody NewsCreateUpdateDto news) {
         return newsService.save(news);
     }
 
+    @RestLog(uri = "/api/v1/news/{id}")
     @PutMapping("/{id}")
     public NewsReadDto update(@PathVariable("id") Long id, @RequestBody NewsCreateUpdateDto news) {
         return newsService.update(id, news).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @RestLog(uri = "/api/v1/news/{id}")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

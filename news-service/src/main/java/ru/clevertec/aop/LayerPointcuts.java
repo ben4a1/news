@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LayerPointcuts {
 
-    @Pointcut("@within(org.springframework.stereotype.Controller)")
+    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
     public void isControllerLayer() {
     }
 
@@ -16,7 +16,7 @@ public class LayerPointcuts {
     public void isServiceLayer() {
     }
 
-    @Pointcut("this(org.springframework.data.repository.Repository)")
+    @Pointcut("target(ru.clevertec.repository.NewsRepository)")
     public void isRepositoryLayer() {
     }
 }

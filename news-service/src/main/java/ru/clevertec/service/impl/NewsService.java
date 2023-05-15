@@ -25,7 +25,6 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final NewsReadMapper newsReadMapper;
     private final NewsCreateUpdateMapper newsCreateUpdateMapper;
-//    @Qualifier("${cache.algorithm}CacheNewsFactory")
     private final Cache<Long, News> cache;
     private final EntityManager entityManager;
 
@@ -96,6 +95,10 @@ public class NewsService {
     }
 
     public Page<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
+        if (filter == null){
+            return newsRepository.findAll(pageable)
+                    .map(newsReadMapper::map);
+        }
         return newsRepository.findAll(filter, pageable)
                 .map(newsReadMapper::map);
     }

@@ -1,9 +1,6 @@
 package ru.clevertec.service.impl;
 
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,7 +10,6 @@ import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
-import ru.clevertec.entity.News;
 import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
@@ -78,13 +74,6 @@ public class CommentService {
                 .map(commentReadMapper::map);
     }
 
-    public List<CommentReadDto> findAll() {
-        return commentRepository.findAll()
-                .stream()
-                .map(commentReadMapper::map)
-                .toList();
-    }
-
     @Transactional
     public boolean delete(Long id) {
         return commentRepository.findById(id)
@@ -96,7 +85,18 @@ public class CommentService {
                 .orElse(false);
     }
 
+    public List<CommentReadDto> findAll() {
+        return commentRepository.findAll()
+                .stream()
+                .map(commentReadMapper::map)
+                .toList();
+    }
+
     public Page<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
+        if (filter == null) {
+            return commentRepository.findAll(pageable)
+                    .map(commentReadMapper::map);
+        }
         return commentRepository.findAll(filter, pageable)
                 .map(commentReadMapper::map);
     }

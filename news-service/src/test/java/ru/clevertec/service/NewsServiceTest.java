@@ -1,14 +1,17 @@
 package ru.clevertec.service;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
+import ru.clevertec.cache.Cache;
+import ru.clevertec.cache.impl.LRUCache;
 import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.entity.News;
+import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.NewsCreateUpdateMapper;
 import ru.clevertec.mapper.impl.NewsReadMapper;
 import ru.clevertec.repository.NewsRepository;
@@ -38,8 +41,21 @@ class NewsServiceTest {
     private NewsReadMapper newsReadMapper;
     @Mock
     private NewsCreateUpdateMapper newsCreateUpdateMapper;
-    @InjectMocks
+    @Mock
+    private CacheFactory<Long, News> cacheFactory;
+    @Mock
+    private EntityManager entityManager;
+    @Mock
+    private final Cache<Long, News> cache = new LRUCache<>(5);
     private NewsService newsService;
+
+
+    @BeforeEach
+    public void setUp() {
+        doReturn(cache)
+                .when(cacheFactory).createCache();
+        newsService = new NewsService(newsRepository, newsReadMapper, newsCreateUpdateMapper, cacheFactory, entityManager);
+    }
 
     @Test
     void checkSave() {

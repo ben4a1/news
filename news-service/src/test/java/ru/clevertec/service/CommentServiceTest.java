@@ -1,13 +1,17 @@
 package ru.clevertec.service;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.clevertec.cache.Cache;
+import ru.clevertec.cache.impl.LFUCache;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
+import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.mapper.impl.CommentCreateUpdateMapper;
 import ru.clevertec.mapper.impl.CommentReadMapper;
 import ru.clevertec.repository.CommentRepository;
@@ -39,8 +43,20 @@ class CommentServiceTest {
     private CommentReadMapper commentReadMapper;
     @Mock
     private CommentCreateUpdateMapper commentCreateUpdateMapper;
-    @InjectMocks
+    @Mock
+    private CacheFactory<Long, Comment> cacheFactory;
+    @Mock
+    private EntityManager entityManager;
+    @Mock
+    private final Cache<Long, Comment> cache = new LFUCache<>(5);
     private CommentService commentService;
+
+    @BeforeEach
+    public void setUp() {
+        doReturn(cache)
+                .when(cacheFactory).createCache();
+        commentService = new CommentService(commentRepository, commentReadMapper, commentCreateUpdateMapper, cacheFactory, entityManager);
+    }
 
     @Test
     void checkSave() {

@@ -20,7 +20,7 @@ class NewsRepositoryIT extends IntegrationTestBase {
     private final NewsRepository repository;
 
     @Test
-    void findAll() {
+    void checkFindAllByFilter() {
         List<Long> expected = Arrays.asList(1L, 2L);
         NewsFilter filter = new NewsFilter("tit", "sub");
 

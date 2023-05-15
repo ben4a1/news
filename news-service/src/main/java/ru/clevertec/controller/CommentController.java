@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.dto.CommentCreateUpdateDto;
+import ru.clevertec.dto.PageResponse;
 import ru.clevertec.service.impl.CommentService;
 
 import java.util.List;
@@ -30,9 +31,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public List<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
+    public PageResponse<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
         Page<CommentReadDto> page = commentService.findAll(filter, pageable);
-        return commentService.findAll();
+        return PageResponse.of(page);
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,6 @@
 ext {
     versions = [
-            'testcontainers': '1.17.6'
+            'testcontainers': '1.17.6',
+            'springdocstarter': '2.0.4'
     ]
 }

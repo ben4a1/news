@@ -45,6 +45,7 @@ class NewsServiceTest {
     private CacheFactory<Long, News> cacheFactory;
     @Mock
     private EntityManager entityManager;
+    @Mock
     private final Cache<Long, News> cache = new LRUCache<>(5);
     private NewsService newsService;
 

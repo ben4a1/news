@@ -47,6 +47,7 @@ class CommentServiceTest {
     private CacheFactory<Long, Comment> cacheFactory;
     @Mock
     private EntityManager entityManager;
+    @Mock
     private final Cache<Long, Comment> cache = new LFUCache<>(5);
     private CommentService commentService;
 

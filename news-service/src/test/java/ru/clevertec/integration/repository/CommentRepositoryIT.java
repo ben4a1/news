@@ -13,6 +13,8 @@ import ru.clevertec.repository.NewsRepository;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RequiredArgsConstructor
 public class CommentRepositoryIT extends IntegrationTestBase {
 
@@ -20,13 +22,16 @@ public class CommentRepositoryIT extends IntegrationTestBase {
     private final NewsRepository newsRepository;
 
     @Test
-    void checkFindAllWithFilter(){
-        List<Comment> expectedCommentList = newsRepository.findById(1L).get().getComments();
-        CommentFilter filter = new CommentFilter(1L, "ec", "name");
+    void checkFindAllWithFilter() {
+        long commentId = 1L;
+        int pageNumber = 0;
+        int pageSize = 10;
+        List<Comment> expectedCommentList = newsRepository.findById(commentId).get().getComments();
+        CommentFilter filter = new CommentFilter(commentId, "ec", "name");
 
-        Page<Comment> all = commentRepository.findAll(filter, PageRequest.of(0, 10));
+        Page<Comment> all = commentRepository.findAll(filter, PageRequest.of(pageNumber, pageSize));
         List<Comment> actualCommentList = all.getContent();
 
-        Assertions.assertThat(actualCommentList).isEqualTo(expectedCommentList);
+        assertThat(actualCommentList).isEqualTo(expectedCommentList);
     }
 }

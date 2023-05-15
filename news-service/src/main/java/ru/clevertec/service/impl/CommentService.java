@@ -93,7 +93,7 @@ public class CommentService {
     }
 
     public Page<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
-        if (filter == null){
+        if (filter == null) {
             return commentRepository.findAll(pageable)
                     .map(commentReadMapper::map);
         }

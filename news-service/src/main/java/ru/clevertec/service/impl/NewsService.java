@@ -70,8 +70,8 @@ public class NewsService {
                 cache.put(news.getId(), news);
             }
         }
-        return news == null ? Optional.empty()
-                : Optional.of(newsReadMapper.map(news));
+        return Optional.ofNullable(news)
+                .map(newsReadMapper::map);
     }
 
     @Transactional

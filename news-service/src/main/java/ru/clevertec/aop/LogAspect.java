@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.clevertec.service.impl.CommentService;
 import ru.clevertec.service.impl.NewsService;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Slf4j
 @Aspect
@@ -49,27 +53,11 @@ public class LogAspect {
     private String getRequestType(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-
-        GetMapping getMapping = method.getAnnotation(GetMapping.class);
-        if (getMapping != null) {
-            return "GET";
-        }
-
-        DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
-        if (deleteMapping != null) {
-            return "DELETE";
-        }
-
-        PostMapping postMapping = method.getAnnotation(PostMapping.class);
-        if (postMapping != null) {
-            return "POST";
-        }
-
-        PutMapping putMapping = method.getAnnotation(PutMapping.class);
-        if (putMapping != null) {
-            return "PUT";
-        }
-
-        return "N/A";
+        return Arrays.toString(Objects.requireNonNull(Arrays.stream(method.getAnnotations())
+                .map(Annotation::annotationType)
+                .filter(annotation -> annotation.isAnnotationPresent(RequestMapping.class))
+                .map(annotation -> annotation.getAnnotation(RequestMapping.class).method())
+                .findFirst()
+                .orElse(null)));
     }
 }

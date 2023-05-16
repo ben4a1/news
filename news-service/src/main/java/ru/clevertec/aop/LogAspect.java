@@ -26,9 +26,8 @@ public class LogAspect {
                                    RequestMapping requestClassAnnotation) throws Throwable {
         String requestType = getRequestType(joinPoint);
         String methodName = joinPoint.getSignature().getName();
-        String[] path = requestClassAnnotation.value();
         Object[] args = joinPoint.getArgs();
-        log.info("Starting {}:{} in {}.{}() with args: {}", requestType, path, controller, methodName, args);
+        log.info("Starting {} in {}.{}() with args: {}", requestType, controller, methodName, args);
         Object result = joinPoint.proceed();
         log.info("Sending response with {}", result);
         return result;

@@ -7,11 +7,11 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Slf4j
 @Aspect
@@ -26,9 +26,8 @@ public class LogAspect {
                                    RequestMapping requestClassAnnotation) throws Throwable {
         String requestType = getRequestType(joinPoint);
         String methodName = joinPoint.getSignature().getName();
-        String[] path = requestClassAnnotation.path();
         Object[] args = joinPoint.getArgs();
-        log.info("Starting {}: {} in {}.{}() with args: {}", requestType, path, controller, methodName, args);
+        log.info("Starting {} in {}.{}() with args: {}", requestType, controller, methodName, args);
         Object result = joinPoint.proceed();
         log.info("Sending response with {}", result);
         return result;
@@ -57,11 +56,12 @@ public class LogAspect {
     private String getRequestType(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        return Arrays.toString(Objects.requireNonNull(Arrays.stream(method.getAnnotations())
+        RequestMethod[] methods = Arrays.stream(method.getAnnotations())
                 .map(Annotation::annotationType)
                 .filter(annotation -> annotation.isAnnotationPresent(RequestMapping.class))
                 .map(annotation -> annotation.getAnnotation(RequestMapping.class).method())
                 .findFirst()
-                .orElse(null)));
+                .orElse(null);
+        return Arrays.toString(methods);
     }
 }

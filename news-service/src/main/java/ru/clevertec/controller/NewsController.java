@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,8 +20,6 @@ import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.dto.PageResponse;
 import ru.clevertec.service.impl.NewsService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/news")
@@ -36,7 +33,6 @@ public class NewsController {
         Page<NewsReadDto> page = newsService.findAll(filter, pageable);
         return PageResponse.of(page);
     }
-
     @GetMapping("/{id}")
     public NewsReadDto findById(@PathVariable("id") Long id) {
         return newsService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

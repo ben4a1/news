@@ -21,8 +21,6 @@ import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.PageResponse;
 import ru.clevertec.service.impl.CommentService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/comments")
 @RequiredArgsConstructor

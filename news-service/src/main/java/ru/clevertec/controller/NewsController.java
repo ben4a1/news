@@ -19,6 +19,7 @@ import ru.clevertec.dto.NewsCreateUpdateDto;
 import ru.clevertec.dto.NewsFilter;
 import ru.clevertec.dto.NewsReadDto;
 import ru.clevertec.dto.PageResponse;
+import ru.clevertec.exception.NewsNotFoundException;
 import ru.clevertec.service.impl.NewsService;
 
 @RestController
@@ -35,7 +36,7 @@ public class NewsController {
     }
     @GetMapping("/{id}")
     public NewsReadDto findById(@PathVariable("id") Long id) {
-        return newsService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return newsService.findById(id).orElseThrow(NewsNotFoundException::new);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

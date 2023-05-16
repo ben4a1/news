@@ -16,7 +16,7 @@ public class LayerPointcuts {
     public void isServiceLayer() {
     }
 
-    @Pointcut("target(ru.clevertec.repository.NewsRepository)")
+    @Pointcut("this(org.springframework.data.repository.Repository)")
     public void isRepositoryLayer() {
     }
 }

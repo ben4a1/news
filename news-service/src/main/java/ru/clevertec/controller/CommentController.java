@@ -19,6 +19,7 @@ import ru.clevertec.dto.CommentFilter;
 import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.dto.CommentCreateUpdateDto;
 import ru.clevertec.dto.PageResponse;
+import ru.clevertec.exception.CommentNotFoundException;
 import ru.clevertec.service.impl.CommentService;
 
 @RestController
@@ -36,7 +37,7 @@ public class CommentController {
 
     @GetMapping("/{id}")
     public CommentReadDto findById(@PathVariable("id") Long id) {
-        return commentService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return commentService.findById(id).orElseThrow(CommentNotFoundException::new);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

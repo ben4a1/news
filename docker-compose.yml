@@ -7,15 +7,13 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8181:8181"
+      - "8080:8080"
     depends_on:
       - service-db
-    links:
-      - redis
     environment:
-      DATABASE_URL: jdbc:postgresql://service-db:5433/postgres
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://service-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
 
   service-db:
     image: postgres:14.7-alpine
@@ -24,15 +22,10 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - "5433:5433"
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
-
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
 
 volumes:
   db-data:

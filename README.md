@@ -13,4 +13,4 @@
 
 To start Spring Boot app with postgres DB in Docker container (write in terminal):
 * gradle clean build -x test
-* docker-compose up --build
+* docker-compose up

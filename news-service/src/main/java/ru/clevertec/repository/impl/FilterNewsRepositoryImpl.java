@@ -30,7 +30,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         Root<News> root = criteria.from(News.class);
         Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, root);
         criteria.select(root)
-                        .where(predicates);
+                .where(predicates);
         List<News> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())
@@ -39,6 +39,12 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 
+    /**
+     * @param filter {@link ru.clevertec.dto.NewsFilter} contains  part of subject, title
+     * @param cb     {@link jakarta.persistence.criteria.CriteriaBuilder}
+     * @param root   {@link jakarta.persistence.criteria.Root}
+     * @return an array of predicates to add to the query
+     */
     private Predicate[] getPredicateArray(NewsFilter filter, CriteriaBuilder cb, Root<News> root) {
         List<Predicate> predicates = new ArrayList<>();
         if (filter.title() != null) {
@@ -50,7 +56,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         return predicates.toArray(Predicate[]::new);
     }
 
-    private long getNewsCount(CriteriaBuilder criteriaBuilder, NewsFilter filter){
+    private long getNewsCount(CriteriaBuilder criteriaBuilder, NewsFilter filter) {
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
         Root<News> countRoot = countQuery.from(News.class);
         Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, countRoot);

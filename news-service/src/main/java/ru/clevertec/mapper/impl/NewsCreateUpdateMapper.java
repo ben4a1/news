@@ -8,6 +8,9 @@ import ru.clevertec.mapper.Mapper;
 import static java.time.LocalDateTime.*;
 import static ru.clevertec.entity.News.*;
 
+/**
+ * Implementation for mapping when creating or updating a news
+ */
 @Component
 public class NewsCreateUpdateMapper implements Mapper<NewsCreateUpdateDto, News> {
 

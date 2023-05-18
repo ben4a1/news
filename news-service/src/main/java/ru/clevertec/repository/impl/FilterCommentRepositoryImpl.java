@@ -44,16 +44,22 @@ public class FilterCommentRepositoryImpl implements FilterCommentRepository {
         return PageableExecutionUtils.getPage(resultList, pageable, () -> total);
     }
 
-    private Predicate[] getPredicateArray(CommentFilter filter, CriteriaBuilder cb, Root<Comment> comment) {
+    /**
+     * @param filter {@link ru.clevertec.dto.CommentFilter} contains news id, part of subject, username
+     * @param cb     {@link jakarta.persistence.criteria.CriteriaBuilder}
+     * @param root   {@link jakarta.persistence.criteria.Root}
+     * @return an array of predicates to add to the query
+     */
+    private Predicate[] getPredicateArray(CommentFilter filter, CriteriaBuilder cb, Root<Comment> root) {
         List<Predicate> predicates = new ArrayList<>();
         if (filter.subject() != null) {
-            predicates.add(cb.like(comment.get(Comment_.SUBJECT), "%" + filter.subject() + "%"));
+            predicates.add(cb.like(root.get(Comment_.SUBJECT), "%" + filter.subject() + "%"));
         }
         if (filter.username() != null) {
-            predicates.add(cb.like(comment.get(Comment_.user).get(User_.USERNAME), "%" + filter.username() + "%"));
+            predicates.add(cb.like(root.get(Comment_.user).get(User_.USERNAME), "%" + filter.username() + "%"));
         }
         if (filter.newsId() != null) {
-            predicates.add(cb.equal(comment.get(Comment_.news).get(News_.ID), filter.newsId()));
+            predicates.add(cb.equal(root.get(Comment_.news).get(News_.ID), filter.newsId()));
         }
         return predicates.toArray(Predicate[]::new);
     }

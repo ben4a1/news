@@ -1,5 +1,11 @@
 package ru.clevertec.mapper;
 
+/**
+ * Interface for mapping entities from entity to DTO and vice versa
+ *
+ * @param <F> From object
+ * @param <T> To object
+ */
 public interface Mapper<F, T> {
 
     T map(F object);

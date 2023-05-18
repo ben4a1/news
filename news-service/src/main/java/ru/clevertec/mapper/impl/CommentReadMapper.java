@@ -5,6 +5,9 @@ import ru.clevertec.dto.CommentReadDto;
 import ru.clevertec.entity.Comment;
 import ru.clevertec.mapper.Mapper;
 
+/**
+ * Implementation for comment display mapping
+ */
 @Component
 public class CommentReadMapper implements Mapper<Comment, CommentReadDto> {
 

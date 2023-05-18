@@ -18,6 +18,9 @@ import ru.clevertec.repository.CommentRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service layer for exchanging comment entities between repository and controller
+ */
 @Service
 @Transactional(readOnly = true)
 public class CommentService {

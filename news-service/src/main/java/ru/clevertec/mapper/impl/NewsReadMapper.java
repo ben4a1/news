@@ -6,6 +6,9 @@ import ru.clevertec.entity.Comment;
 import ru.clevertec.entity.News;
 import ru.clevertec.mapper.Mapper;
 
+/**
+ * Implementation for news display mapping
+ */
 @Component
 public class NewsReadMapper implements Mapper<News, NewsReadDto> {
 

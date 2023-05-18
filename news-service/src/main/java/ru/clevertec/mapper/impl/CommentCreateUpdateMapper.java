@@ -10,6 +10,9 @@ import ru.clevertec.repository.UserRepository;
 
 import static java.time.LocalDateTime.now;
 
+/**
+ * Implementation for mapping when creating or updating a comment
+ */
 @Component
 @RequiredArgsConstructor
 public class CommentCreateUpdateMapper implements Mapper<CommentCreateUpdateDto, Comment> {

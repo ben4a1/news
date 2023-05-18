@@ -1,5 +1,8 @@
 package ru.clevertec.model;
 
+/**
+ * User roles
+ */
 public enum Role {
 
     /**

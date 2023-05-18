@@ -9,6 +9,24 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
+      connect-timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 10
+          min-idle: 5
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300
+      cache-null-values: false
+  main:
+    allow-bean-definition-overriding: true
 
 cache:
   size: 5

@@ -9,8 +9,9 @@
 >-	news (новость) содержит поля: id, time, title, text и comments (list).
 >-	comment содержит поля: id, time, text, username и news_id.
 
-[Spring REST Docs url](http://localhost:8080/swagger-ui/index.html)
+[Spring REST Docs url (swagger)](http://localhost:8080/swagger-ui/index.html)
 
 To start Spring Boot app with postgres DB in Docker container (write in terminal):
 * gradle clean build -x test
+* docker-compose build --no-cache
 * docker-compose up

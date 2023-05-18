@@ -1,6 +1,10 @@
 package ru.clevertec.service.impl;
 
 import jakarta.persistence.EntityManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "newsCache")
 @Transactional(readOnly = true)
 public class NewsService {
 
@@ -36,6 +41,7 @@ public class NewsService {
         this.entityManager = entityManager;
     }
 
+    @CacheEvict(cacheNames = "news", allEntries = true)
     @Transactional
     public NewsReadDto save(NewsCreateUpdateDto news) {
         News newsToSave = newsCreateUpdateMapper.map(news);
@@ -44,6 +50,7 @@ public class NewsService {
         return newsReadMapper.map(savedNews);
     }
 
+    @CacheEvict(cacheNames = "news", allEntries = true)
     @Transactional
     public Optional<NewsReadDto> update(Long id, NewsCreateUpdateDto news) {
         Optional<News> newsToUpdate = newsRepository.findById(id);
@@ -58,6 +65,7 @@ public class NewsService {
         }
     }
 
+    @Cacheable(cacheNames = "new", key = "#id", unless = "#result == null")
     public Optional<NewsReadDto> findById(Long id) {
         News news;
         if (cache.contains(id)) {
@@ -74,6 +82,8 @@ public class NewsService {
                 .map(newsReadMapper::map);
     }
 
+    @Caching(evict = {@CacheEvict(cacheNames = "new", key = "#id"),
+            @CacheEvict(cacheNames = "news", allEntries = true)})
     @Transactional
     public boolean delete(Long id) {
         Optional<News> newsToDelete = newsRepository.findById(id);
@@ -87,6 +97,7 @@ public class NewsService {
         }
     }
 
+    @Cacheable(cacheNames = "news")
     public List<NewsReadDto> findAll() {
         return newsRepository.findAll()
                 .stream()
@@ -94,6 +105,7 @@ public class NewsService {
                 .toList();
     }
 
+    @Cacheable(cacheNames = "news")
     public Page<NewsReadDto> findAll(NewsFilter filter, Pageable pageable) {
         if (filter == null){
             return newsRepository.findAll(pageable)

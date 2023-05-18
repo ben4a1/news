@@ -1,6 +1,10 @@
 package ru.clevertec.service.impl;
 
 import jakarta.persistence.EntityManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "commentCache")
 @Transactional(readOnly = true)
 public class CommentService {
 
@@ -36,6 +41,7 @@ public class CommentService {
         this.entityManager = entityManager;
     }
 
+    @CacheEvict(cacheNames = "comments", allEntries = true)
     @Transactional
     public CommentReadDto save(CommentCreateUpdateDto comment) {
         Comment commentToSave = commentCreateUpdateMapper.map(comment);
@@ -44,6 +50,7 @@ public class CommentService {
         return commentReadMapper.map(savedComment);
     }
 
+    @CacheEvict(cacheNames = "comments", allEntries = true)
     @Transactional
     public Optional<CommentReadDto> update(Long id, CommentCreateUpdateDto comment) {
         Optional<Comment> commentToUpdate = commentRepository.findById(id);
@@ -58,6 +65,7 @@ public class CommentService {
         }
     }
 
+    @Cacheable(cacheNames = "comment", key = "#id", unless = "#result == null")
     public Optional<CommentReadDto> findById(Long id) {
         Comment comment;
         if (cache.contains(id)) {
@@ -74,6 +82,8 @@ public class CommentService {
                 .map(commentReadMapper::map);
     }
 
+    @Caching(evict = {@CacheEvict(cacheNames = "comment", key = "#id"),
+            @CacheEvict(cacheNames = "comments", allEntries = true)})
     @Transactional
     public boolean delete(Long id) {
         return commentRepository.findById(id)
@@ -85,6 +95,7 @@ public class CommentService {
                 .orElse(false);
     }
 
+    @Cacheable(cacheNames = "comments")
     public List<CommentReadDto> findAll() {
         return commentRepository.findAll()
                 .stream()
@@ -92,6 +103,7 @@ public class CommentService {
                 .toList();
     }
 
+    @Cacheable(cacheNames = "comments")
     public Page<CommentReadDto> findAll(CommentFilter filter, Pageable pageable) {
         if (filter == null) {
             return commentRepository.findAll(pageable)

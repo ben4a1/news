@@ -17,9 +17,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdocstarter}"
     implementation 'org.postgresql:postgresql'
+    implementation "org.hibernate:hibernate-validator:${versions.hibernatevalidator}"
     implementation 'org.liquibase:liquibase-core'
+    implementation "redis.clients:jedis:${versions.jedis}"
     annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"

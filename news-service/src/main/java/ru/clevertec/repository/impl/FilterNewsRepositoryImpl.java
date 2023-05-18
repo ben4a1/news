@@ -30,7 +30,7 @@ public class FilterNewsRepositoryImpl implements FilterNewsRepository {
         Root<News> root = criteria.from(News.class);
         Predicate[] predicates = getPredicateArray(filter, criteriaBuilder, root);
         criteria.select(root)
-                .where(predicates);
+                        .where(predicates);
         List<News> resultList = entityManager.createQuery(criteria)
                 .setFirstResult(pageable.getPageSize() * (pageable.getPageNumber()))
                 .setMaxResults(pageable.getPageSize())

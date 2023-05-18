@@ -84,7 +84,7 @@ public class LogAspect {
     /**
      * method to determine the request type
      *
-     * @param joinPoint  ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
+     * @param joinPoint ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
      * @return String value (GET, POST, etc.)
      */
     private String getRequestType(ProceedingJoinPoint joinPoint) {

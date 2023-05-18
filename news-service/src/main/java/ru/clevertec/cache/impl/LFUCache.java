@@ -15,6 +15,7 @@ import java.util.Map;
  * @param <V> – the type of cached values
  */
 public class LFUCache<K, V> implements Cache<K, V> {
+
     private final int cacheSize;
     private final Map<K, Node<K, V>> cacheData;
     private final Node<K, V> head;
@@ -32,6 +33,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
     }
 
     public class Node<K, V> {
+
         public K key;
         public V value;
         public int count;

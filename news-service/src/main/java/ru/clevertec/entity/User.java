@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.clevertec.model.Role;
 
+/**
+ * POJO class for storing users in the database
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +26,9 @@ import ru.clevertec.model.Role;
 @Table(name = "users")
 public class User implements BaseEntity<Long> {
 
+    /**
+     * user unique id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

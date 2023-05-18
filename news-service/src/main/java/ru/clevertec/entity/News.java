@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * POJO class for storing news in the database
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,17 +30,32 @@ import java.util.List;
 @Table(name = "news")
 public class News implements BaseEntity<Long> {
 
+    /**
+     * News unique id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * News creation time
+     */
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
+    /**
+     * News headline
+     */
     private String title;
 
+    /**
+     * News content
+     */
     private String subject;
 
+    /**
+     * Collection of comments related to the news
+     */
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     @Builder.Default
     private final List<Comment> comments = new ArrayList<>();

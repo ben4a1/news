@@ -16,6 +16,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * POJO class for storing comments in the database
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,18 +28,37 @@ import java.time.LocalDateTime;
 @Table(name = "comment")
 public class Comment implements BaseEntity<Long> {
 
+    /**
+     * Comment unique id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Comment creation time
+     */
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
+    /**
+     * Comment content
+     */
     private String subject;
 
+    /**
+     * The user who left the comment
+     * <p>
+     * ManyToOne relationship (many comments - one user)
+     */
     @ManyToOne
     private User user;
 
+    /**
+     * The news to which the comment relates
+     * <p>
+     * ManyToOne relationship (many comments - one user)
+     */
     @ManyToOne
     private News news;
 

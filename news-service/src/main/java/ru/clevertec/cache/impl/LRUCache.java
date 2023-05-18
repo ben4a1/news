@@ -13,6 +13,10 @@ import java.util.Map;
  * @param <V> – the type of cached values
  */
 public class LRUCache<K, V> implements Cache<K, V> {
+
+    /**
+     * The number of key-value mappings contained in this cache.
+     */
     private final int cacheSize;
     private final Map<K, V> cacheData;
 
@@ -32,6 +36,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
         };
         this.cacheSize = cacheSize;
     }
+
 
     @Override
     public void put(K key, V value) {

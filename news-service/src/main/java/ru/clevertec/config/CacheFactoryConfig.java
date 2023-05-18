@@ -10,6 +10,10 @@ import ru.clevertec.factory.CacheFactory;
 import ru.clevertec.factory.impl.CacheFactoryLFUImpl;
 import ru.clevertec.factory.impl.CacheFactoryLRUImpl;
 
+/**
+ * Configuration class for custom caches with size and
+ * algorithm taken from application.yml
+ */
 @Configuration
 public class CacheFactoryConfig {
 
@@ -22,6 +26,9 @@ public class CacheFactoryConfig {
         this.cacheAlgorithm = cacheAlgorithm;
     }
 
+    /**
+     * @return cache for CommentService
+     */
     @Bean(name = "cacheCommentFactory")
     public CacheFactory<Long, Comment> cacheFactoryComment() {
         if ("lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
@@ -32,6 +39,9 @@ public class CacheFactoryConfig {
         return null;
     }
 
+    /**
+     * @return cache for CommentService
+     */
     @Bean(name = "cacheNewsFactory")
     public CacheFactory<Long, News> cacheFactoryNews() {
         if ("lru".equalsIgnoreCase(cacheAlgorithm.getAlgorithm())) {
@@ -42,6 +52,10 @@ public class CacheFactoryConfig {
         return null;
     }
 
+    /**
+     * ENUM possible algorithm cache type (in
+     * the context of this application)
+     */
     private enum CacheAlgorithm {
 
         LRU("lru"),

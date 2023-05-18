@@ -1,6 +1,7 @@
 ext {
     versions = [
-            'testcontainers': '1.17.6',
-            'springdocstarter': '2.0.4'
+            'testcontainers'    : '1.17.6',
+            'springdocstarter'  : '2.0.4',
+            'hibernatevalidator': '6.2.5.Final'
     ]
 }

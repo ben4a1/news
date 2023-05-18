@@ -13,11 +13,23 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+/**
+ * Class with advices for logging
+ */
 @Slf4j
 @Aspect
 @Component
 public class LogAspect {
 
+    /**
+     * advice (logging) when working with Controllers
+     *
+     * @param joinPoint              ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
+     * @param controller             class which works with request
+     * @param requestClassAnnotation annotation @RequestMapping
+     * @return the result of joinPoint proceeding
+     * @throws Throwable if the invoked proceed throws anything
+     */
     @Around(value = "ru.clevertec.aop.LayerPointcuts.isControllerLayer()" +
                     "&& target(controller)" +
                     "&& @within(requestClassAnnotation)", argNames = "joinPoint,controller,requestClassAnnotation")
@@ -33,6 +45,14 @@ public class LogAspect {
         return result;
     }
 
+    /**
+     * advice (logging) when working with Services
+     *
+     * @param joinPoint ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
+     * @param service   service that accepts a request from a controller
+     * @return the result of joinPoint proceeding
+     * @throws Throwable if the invoked proceed throws anything
+     */
     @Around("ru.clevertec.aop.LayerPointcuts.isServiceLayer()" +
             "&& target(service)")
     public Object addServiceLog(ProceedingJoinPoint joinPoint, Object service) throws Throwable {
@@ -43,6 +63,14 @@ public class LogAspect {
         return result;
     }
 
+    /**
+     * advice (logging) when working with Repositories
+     *
+     * @param joinPoint  ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
+     * @param repository repository that accepts a request from a service
+     * @return the result of joinPoint proceeding
+     * @throws Throwable if the invoked proceed throws anything
+     */
     @Around("ru.clevertec.aop.LayerPointcuts.isRepositoryLayer()" +
             "&& target(repository)")
     public Object addRepositoryLog(ProceedingJoinPoint joinPoint, Object repository) throws Throwable {
@@ -53,6 +81,12 @@ public class LogAspect {
         return result;
     }
 
+    /**
+     * method to determine the request type
+     *
+     * @param joinPoint ProceedingJoinPoint exposes the proceed(..) method in order to support around advice in @AJ aspects
+     * @return String value (GET, POST, etc.)
+     */
     private String getRequestType(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();

@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Class with text for {@link ru.clevertec.exception.RestAdvice}
+ */
 @Getter
 @Setter
 @NoArgsConstructor

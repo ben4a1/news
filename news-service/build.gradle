@@ -20,6 +20,7 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.springdocstarter}"
     implementation 'org.postgresql:postgresql'
     implementation 'org.liquibase:liquibase-core'
+    implementation "org.hibernate:hibernate-validator:${versions.hibernatevalidator}"
     annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"

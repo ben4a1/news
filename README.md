@@ -36,7 +36,7 @@ To start Spring Boot app with postgres DB in Docker container:
 - *PUT* `/news/api/v1/news/{id}` *Update News by ID*
 - *DELETE*  `/news/api/v1/news/{id}` *Delete News by ID*
 
-  *Comments*
+*Comments*
 - *GET*  `/news/api/v1/Comments` *Find all Comments (with filter or without)*
 - *POST* `/news/api/v1/Comments` *Save new Comment*
 - *GET* `/news/api/v1/Comments/{id}` *Find Comment by ID*
